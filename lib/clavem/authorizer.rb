@@ -104,10 +104,15 @@ module Clavem
       @status = :waiting
 
       begin
+        # Setup stuff
         setup_webserver
+        setup_interruptions_handling
+        setup_timeout_handling
+
+        # Open the endpoint then start the server
         open_endpoint
         @server.start
-        @timeout_expired
+
         raise Clavem::Exceptions::Timeout.new if @timeout_expired
       rescue Clavem::Exceptions::Timeout => t
         @status = :failure
@@ -144,6 +149,22 @@ module Clavem
         end
       end
 
+      # Handle interruptions for the process.
+      def setup_interruptions_handling
+        ["INT", "TERM", "KILL"].each {|signal| trap(signal){ @server.shutdown if @server } }
+      end
+
+      # Handle timeout for the response.
+      def setup_timeout_handling
+        if @timeout > 0 then
+          @timeout_thread = Thread.new do
+            sleep @timeout
+            @timeout_expired = true
+            Process.kill("TERM", 0)
+          end
+        end
+      end
+
       # Prepare the webserver for handling the response.
       def setup_webserver
         @server = ::WEBrick::HTTPServer.new(BindAddress: @ip, Port: @port, Logger: WEBrick::Log.new("/dev/null"), AccessLog: [nil, nil])
@@ -162,18 +183,6 @@ module Clavem
 
             response.body = @compiled_template.result(binding)
             @server.shutdown
-          end
-        end
-
-        # Handle interruptions
-        ["INT", "TERM", "KILL"].each {|signal| trap(signal){ @server.shutdown if @server } }
-
-        # Handle timeout
-        if @timeout > 0 then
-          @timeout_thread = Thread.new do
-            sleep @timeout
-            @timeout_expired = true
-            Process.kill("TERM", 0)
           end
         end
       end

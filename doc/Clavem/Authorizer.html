@@ -1745,7 +1745,12 @@
 121
 122
 123
-124</pre>
+124
+125
+126
+127
+128
+129</pre>
     </td>
     <td>
       <pre class="code"><span class="info file"># File 'lib/clavem/authorizer.rb', line 103</span>
@@ -1754,10 +1759,15 @@
   <span class='ivar'>@status</span> <span class='op'>=</span> <span class='symbol'>:waiting</span>
 
   <span class='kw'>begin</span>
-    <span class='id identifier rubyid_setup_webserver'>setup_webserver</span>
-    <span class='id identifier rubyid_open_endpoint'>open_endpoint</span>
+    <span class='comment'># Setup stuff
+</span>    <span class='id identifier rubyid_setup_webserver'>setup_webserver</span>
+    <span class='id identifier rubyid_setup_interruptions_handling'>setup_interruptions_handling</span>
+    <span class='id identifier rubyid_setup_timeout_handling'>setup_timeout_handling</span>
+
+    <span class='comment'># Open the endpoint then start the server
+</span>    <span class='id identifier rubyid_open_endpoint'>open_endpoint</span>
     <span class='ivar'>@server</span><span class='period'>.</span><span class='id identifier rubyid_start'>start</span>
-    <span class='ivar'>@timeout_expired</span>
+
     <span class='id identifier rubyid_raise'>raise</span> <span class='const'>Clavem</span><span class='op'>::</span><span class='const'>Exceptions</span><span class='op'>::</span><span class='const'>Timeout</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span> <span class='kw'>if</span> <span class='ivar'>@timeout_expired</span>
   <span class='kw'>rescue</span> <span class='const'>Clavem</span><span class='op'>::</span><span class='const'>Exceptions</span><span class='op'>::</span><span class='const'>Timeout</span> <span class='op'>=&gt;</span> <span class='id identifier rubyid_t'>t</span>
     <span class='ivar'>@status</span> <span class='op'>=</span> <span class='symbol'>:failure</span>
@@ -1868,12 +1878,12 @@
       <pre class="lines">
 
 
-132
-133
-134</pre>
+137
+138
+139</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/clavem/authorizer.rb', line 132</span>
+      <pre class="code"><span class="info file"># File 'lib/clavem/authorizer.rb', line 137</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_default_response_handler'>default_response_handler</span><span class='lparen'>(</span><span class='id identifier rubyid_authorizer'>authorizer</span><span class='comma'>,</span> <span class='id identifier rubyid_request'>request</span><span class='comma'>,</span> <span class='id identifier rubyid_response'>response</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_request'>request</span><span class='period'>.</span><span class='id identifier rubyid_query'>query</span><span class='lbracket'>[</span><span class='tstring'><span class='tstring_beg'>'</span><span class='tstring_content'>oauth_token</span><span class='tstring_end'>'</span></span><span class='rbracket'>]</span><span class='period'>.</span><span class='id identifier rubyid_ensure_string'>ensure_string</span>
@@ -1888,7 +1898,7 @@
 </div>
 
     <div id="footer">
-  Generated on Sat Jan 26 11:50:30 2013 by
+  Generated on Sat Jan 26 12:13:06 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.8.3 (ruby-1.9.3).
 </div>
