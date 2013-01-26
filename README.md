@@ -6,7 +6,7 @@
 
 A local callback server for oAuth web-flow.
 
-http://sw.cow.tc/clavem
+http://clavem.cow.tc/
 
 http://rdoc.info/gems/clavem
 
