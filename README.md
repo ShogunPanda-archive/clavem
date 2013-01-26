@@ -1,4 +1,4 @@
-# clavem
+# Introduction
 
 [![Build Status](https://secure.travis-ci.org/ShogunPanda/clavem.png?branch=master)](https://travis-ci.org/ShogunPanda/clavem)
 [![Dependency Status](https://gemnasium.com/ShogunPanda/clavem.png?travis)](https://gemnasium.com/ShogunPanda/clavem)
@@ -22,6 +22,6 @@ http://rdoc.info/gems/clavem
 
 ## Copyright
 
-Copyright (C) 2013 and above Shogun <shogun_panda@me.com>.
+Copyright (C) 2013 and above Shogun (shogun_panda@me.com).
 
 Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
