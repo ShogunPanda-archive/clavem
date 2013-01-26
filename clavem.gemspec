@@ -22,7 +22,18 @@ Gem::Specification.new do |gem|
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  # TODO: Add dependencies via gem.add_dependency
+  gem.required_ruby_version = ">= 1.9.2"
 
-  # TODO: Add development dependencies via gem.add_development_dependency
+  gem.add_dependency("r18n-desktop", "~> 1.1.3")
+  gem.add_dependency("lazier", "~> 1.0.7")
+  gem.add_dependency("mamertes", "~> 1.2.0")
+  gem.add_dependency("webrick", "~> 1.3.1")
+
+  gem.add_development_dependency("rspec", "~> 2.12.0")
+  gem.add_development_dependency("rake", "~> 10.0.3")
+  gem.add_development_dependency("simplecov", "~> 0.7.1")
+  gem.add_development_dependency("pry", ">= 0.9.11.4")
+  gem.add_development_dependency("yard", "~> 0.8.3")
+  gem.add_development_dependency("redcarpet", "~> 2.2.2")
+  gem.add_development_dependency("github-markup", "~> 0.7.5")
 end

@@ -6,7 +6,9 @@
 
 A local callback server for oAuth web-flow.
 
-http://github.com/ShogunPanda/clavem
+http://sw.cow.tc/clavem
+
+http://docs.cow.tc/clavem
 
 ## Contributing to clavem
  

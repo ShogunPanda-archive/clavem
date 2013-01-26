@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+# encoding: utf-8
+#
+# This file is part of the clavem gem. Copyright (C) 2013 and above Shogun <shogun_panda@me.com>.
+# Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
+#
+
+require "clavem"
+require "mamertes"
+
+Mamertes.App(name: "Clavem", version: Clavem::Version::STRING, description: "A local callback server for oAuth web-flow.") do
+  # @param url [String] The URL where to send the user to start authorization.
+  # @param ip [String] The IP address on which listening for replies. Default is `127.0.0.1`.
+  # @param port [Fixnum] The port on which listening for replies. Default is `2501`.
+  # @param command [String|nil] The command to open the URL. `{{URL}}` is replaced with the specified URL. Default is `open "{{URL}}"`.
+  # @param title [String|nil] The title for response template. Default is `Clavem Authorization`
+  # @param template [String|nil] Alternative template to show progress in user's browser.
+  # @param timeout [Fixnum] The amount of seconds to wait for response from the remote endpoint before returning a failure. Default is `0`, which means *disabled*.
+
+  option(:url, ["u", "url"], {type: String, help: "The URL where to send the user to start authorization.", meta: "URL", :required => true})
+  option(:ip, ["i", "ip"], {type: String, help: "The IP address on which listening for replies. Default is 127.0.0.1.", meta: "IP", default: "127.0.0.1"})
+  option(:port, ["p", "port"], {type: Integer, help: "The port on which listening for replies. Default is `2501`.", meta: "PORT", default: 2501})
+  option(:command, ["c", "command"], {type: String, help: "The command to open the URL. {{URL}} is replaced with the specified URL. Default is 'open \"{{URL}}\"'.", meta: "COMMAND", :default => "open \"{{URL}}\""})
+  option(:title, ["t", "title"], {type: String, help: "The title for response template. Default is \"Clavem Authorization\".", meta: "TITLE"})
+  option(:template, ["v", "template"], {type: String, help: "Alternative template to show progress in user's browser.", meta: "TEMPLATE"})
+  option(:timeout, ["n", "timeout"], {type: Integer, help: "The amount of seconds to wait for response from the remote endpoint before returning a failure.", meta: "TIMEOUT"})
+  option(:quiet, ["q", "quiet"], {help: "Do not print anything but errors."})
+
+  action do |command|
+    quiet = command.options["quiet"].value
+    authorizer = nil
+
+    command.console.task(!quiet ? "Running Clavem on #{command.options["ip"].value}:#{command.options["port"].value}" : nil) do
+      rv = :ok
+      authorizer = Clavem::Authorizer.instance(command.options["url"].value, command.options["ip"].value, command.options["port"].value, command.options["command"].value, command.options["title"].value, command.options["template"].value, command.options["timeout"].value).authorize
+      rv
+    end
+
+    command.console.info("Obtained access token is: #{authorizer.token}") if !quiet
+  end
+end

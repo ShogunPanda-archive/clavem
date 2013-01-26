@@ -5,3 +5,7 @@
 #
 
 require "spec_helper"
+
+describe Clavem::Authorizer do
+
+end

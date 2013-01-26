@@ -4,7 +4,12 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-# TODO: Include dependencies
+require "r18n-desktop"
+require "lazier"
+require "webrick"
+require "erb"
 
 require "clavem/version" if !defined?(Clavem::Version)
-# TODO: Include other sources
+require "clavem/authorizer"
+
+R18n.from_env(Pathname.new(File.dirname(__FILE__)).to_s + "/../locales/")
