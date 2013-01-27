@@ -4,6 +4,8 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
+Lazier.load!(:object)
+
 # A local callback server for oAuth web-flow.
 module Clavem
   # Exceptions used by {Authorizer Authorizer}.
@@ -80,10 +82,10 @@ module Clavem
     def initialize(url, ip = "127.0.0.1", port = 2501, command = nil, title = nil, template = nil, timeout = 0, &response_handler)
       @url = url
       @ip = ip.present? ? ip : "127.0.0.1"
-      @port = port#[port.to_integer, 2501].max
-      @command = command.present? ? command : "open \"{{URL}}\""
-      @title = title.present? ? title : "Clavem Authorization"
-      @template = template.present? ? template : File.read(File.dirname(__FILE__) + "/template.html.erb")
+      @port = [port.to_integer, 2501].max
+      @command = command.present? ? command.ensure_string : "open \"{{URL}}\""
+      @title = title.present? ? title.ensure_string : "Clavem Authorization"
+      @template = template.present? ? template.ensure_string : File.read(File.dirname(__FILE__) + "/template.html.erb")
       @timeout = [timeout.to_integer, 0].max
       @response_handler = response_handler
 

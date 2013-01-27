@@ -15,6 +15,7 @@ if ENV["CLAVEM_COVERAGE"] then
       path = Pathname.new(src_file.filename).relative_path_from(root).to_s
       
       # TODO: Add exclusions here
+      path !~ /^(bin|lib)/
     end
   end
 end
