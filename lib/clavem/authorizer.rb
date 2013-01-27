@@ -78,14 +78,13 @@ module Clavem
     # @param response_handler [Proc] A Ruby block to handle response and check for success. See {#default_response_handler}.
     # @return [Authorizer] The new authorizer.
     def initialize(ip = "127.0.0.1", port = 2501, command = nil, title = nil, template = nil, timeout = 0, &response_handler)
-      @ip = ip.present? ? ip : "127.0.0.1"
-      @port = port.to_integer < 1 ? 2501 : port.to_integer
-      @command = command.present? ? command.ensure_string : "open \"{{URL}}\""
-      @title = title.present? ? title.ensure_string : "Clavem Authorization"
-      @template = template.present? ? template.ensure_string : File.read(File.dirname(__FILE__) + "/template.html.erb")
-      @timeout = [timeout.to_integer, 0].max
+      @ip = ip.ensure_string
+      @port = port.to_integer
+      @command = command.ensure_string
+      @title = title.ensure_string
+      @template = template.ensure_string
+      @timeout = timeout.to_integer
       @response_handler = response_handler
-
       @token = nil
       @status = :waiting
       @compiled_template ||= ::ERB.new(@template)
@@ -93,6 +92,7 @@ module Clavem
       @timeout_expired = false
       @timeout_thread = nil
 
+      sanitize_arguments
       self
     end
 
@@ -147,6 +147,16 @@ module Clavem
     end
 
     private
+      # sanitize_arguments
+      def sanitize_arguments
+        @ip = "127.0.0.1" if @ip.blank?
+        @port = 2501 if @port.to_integer < 1
+        @command = "open \"{{URL}}\"" if @command.blank?
+        @title = "Clavem Authorization" if @title.blank?
+        @template = File.read(File.dirname(__FILE__) + "/template.html.erb") if @template.blank?
+        @timeout = 0 if @timeout < 0
+      end
+
       # Open the remote endpoint
       def open_endpoint
         # Open the oAuth endpoint into the browser
