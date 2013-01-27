@@ -10,6 +10,37 @@ http://sw.cow.tc/clavem
 
 http://rdoc.info/gems/clavem
 
+## Usage
+
+clavem allows you to handle a full oAuth authentication flow directly from the console.
+
+Simply instantiate the authorizer and run the authorize method with the URL:
+
+```
+require "clavem"
+
+# Initalize your oAuth access.
+
+authorizer = Clavem::Authorizer.new
+
+# Get your authorization URL and append the callback.
+
+url += "?oauth_callback=#{authorizer.callback_url}"
+authorizer.authorize(url)
+
+if authorizer.status == :succeded then
+  access_token = authorizer.token
+
+  # Go on!
+else
+  # Authorization denied
+end
+```
+
+Alternatively, you can also specify a timeout and a block to the constructor to customizer the response handling.
+
+See the [documentation](http://rdoc.info/gems/clavem) for more information.
+
 ## Contributing to clavem
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
