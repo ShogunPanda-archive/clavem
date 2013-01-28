@@ -32,7 +32,7 @@ Mamertes.App(name: "Clavem", version: Clavem::Version::STRING, description: "A l
 
     command.console.task(!quiet ? "Running Clavem on #{command.options["ip"].value}:#{command.options["port"].value}" : nil) do
       rv = :ok
-      authorizer = Clavem::Authorizer.instance(command.options["url"].value, command.options["ip"].value, command.options["port"].value, command.options["command"].value, command.options["title"].value, command.options["template"].value, command.options["timeout"].value).authorize
+      authorizer = Clavem::Authorizer.instance(command.options["ip"].value, command.options["port"].value, command.options["command"].value, command.options["title"].value, command.options["template"].value, command.options["timeout"].value).authorize(command.options["url"].value)
       rv
     end
 
