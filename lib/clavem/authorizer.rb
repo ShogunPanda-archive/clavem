@@ -85,6 +85,9 @@ module Clavem
       @template = template.ensure_string
       @timeout = timeout.to_integer
       @response_handler = response_handler
+
+      sanitize_arguments
+
       @token = nil
       @status = :waiting
       @compiled_template ||= ::ERB.new(@template)
@@ -92,7 +95,6 @@ module Clavem
       @timeout_expired = false
       @timeout_thread = nil
 
-      sanitize_arguments
       self
     end
 
