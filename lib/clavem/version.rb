@@ -16,7 +16,7 @@ module Clavem
     MINOR = 0
 
     # The patch version.
-    PATCH = 2
+    PATCH = 3
 
     # The current version of clavem.
     STRING = [MAJOR, MINOR, PATCH].compact.join(".")
