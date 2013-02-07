@@ -174,6 +174,25 @@ describe Clavem::Authorizer do
     end
   end
 
+  describe ".localize" do
+    it "should set the right locale path" do
+      expect(instance.instance_variable_get(:@i18n_locales_path)).to eq(File.absolute_path(::Pathname.new(File.dirname(__FILE__)).to_s + "/../../locales/"))
+      instance.localize
+    end
+
+    it "should set using English if called without arguments" do
+      authorizer = ::Clavem::Authorizer.new
+      R18n::I18n.should_receive(:new).with([:en, ENV["LANG"], R18n::I18n.system_locale].compact, File.absolute_path(::Pathname.new(File.dirname(__FILE__)).to_s + "/../../locales/")).and_call_original
+      authorizer.localize
+    end
+
+    it "should set the requested locale" do
+      authorizer = ::Clavem::Authorizer.new
+      R18n::I18n.should_receive(:new).with([:it, ENV["LANG"], R18n::I18n.system_locale].compact, File.absolute_path(::Pathname.new(File.dirname(__FILE__)).to_s + "/../../locales/")).and_call_original
+      authorizer.localize(:it)
+    end
+  end
+
   # PRIVATE
   describe "#open_endpoint" do
     it("should call system with the right command") do

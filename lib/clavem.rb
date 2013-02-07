@@ -11,5 +11,3 @@ require "erb"
 
 require "clavem/version" if !defined?(Clavem::Version)
 require "clavem/authorizer"
-
-R18n.from_env(Pathname.new(File.dirname(__FILE__)).to_s + "/../locales/")

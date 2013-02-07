@@ -78,6 +78,8 @@ module Clavem
     # @param response_handler [Proc] A Ruby block to handle response and check for success. See {#default_response_handler}.
     # @return [Authorizer] The new authorizer.
     def initialize(ip = "127.0.0.1", port = 2501, command = nil, title = nil, template = nil, timeout = 0, &response_handler)
+      @i18n = self.localize
+
       @ip = ip.ensure_string
       @port = port.to_integer
       @command = command.ensure_string
@@ -91,7 +93,6 @@ module Clavem
       @token = nil
       @status = :waiting
       @compiled_template ||= ::ERB.new(@template)
-      @i18n = t
       @timeout_expired = false
       @timeout_thread = nil
 
@@ -122,7 +123,7 @@ module Clavem
         raise t
       rescue => e
         @status = :failure
-        raise Clavem::Exceptions::Failure.new("Cannot handle response: #{e.to_s}")
+        raise Clavem::Exceptions::Failure.new(@i18n.errors.response_failure(e.to_s))
       ensure
         cleanup
       end
@@ -148,13 +149,22 @@ module Clavem
       request.query['oauth_token'].ensure_string
     end
 
+    # Set the current locale for messages.
+    #
+    # @param locale [String] The new locale. Default is the current system locale.
+    # @return [R18n::Translation] The new translations object.
+    def localize(locale = nil)
+      @i18n_locales_path ||= ::File.absolute_path(::Pathname.new(::File.dirname(__FILE__)).to_s + "/../../locales/")
+      R18n::I18n.new([locale || :en, ENV["LANG"], R18n::I18n.system_locale].compact, @i18n_locales_path).t.clavem
+    end
+
     private
       # sanitize_arguments
       def sanitize_arguments
         @ip = "127.0.0.1" if @ip.blank?
         @port = 2501 if @port.to_integer < 1
         @command = "open \"{{URL}}\"" if @command.blank?
-        @title = "Clavem Authorization" if @title.blank?
+        @title = @i18n.default_title if @title.blank?
         @template = File.read(File.dirname(__FILE__) + "/template.html.erb") if @template.blank?
         @timeout = 0 if @timeout < 0
       end
@@ -165,7 +175,7 @@ module Clavem
         begin
           Kernel.system(@command.gsub("{{URL}}", @url.ensure_string))
         rescue => e
-          raise Clavem::Exceptions::Failure.new("Cannot open URL #{@url}: #{e.to_s}")
+          raise Clavem::Exceptions::Failure.new(@i18n.errors.open_failure(@url.ensure_string, e.to_s))
         end
       end
 

@@ -1,8 +1,10 @@
 language: ruby
 rvm:
-  - 1.9.2
   - 1.9.3
   - 2.0.0
-script: bundle exec rake spec:coverage
+  - jruby-19mode
+  - rbx-19mode
+script: bundle exec rake spec
+gemfile: .travis-gemfile
 notifications:
   email: false

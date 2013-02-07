@@ -3,7 +3,14 @@
 # This file is part of the clavem gem. Copyright (C) 2013 and above Shogun <shogun_panda@me.com>.
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
+
 ---
-header_success: "Autenticazione riuscita!"
-header_failure: "Autenticazione fallita!"
-close_message: "Questa finestra dovrebbe chiudersi immediatamente. Alternativamente puoi chiuderla <a href=\"javascript:close_window();\">cliccando qui</a>."
+  clavem:
+    default_title: Autorizzazione Clavem
+    errors:
+      response_failure: "Impossibile gestire una risposta: %1"
+      open_failure: "Impossible aprire l'URL %1: %2"
+    template:
+      header_success: "Autenticazione riuscita!"
+      header_failure: "Autenticazione fallita!"
+      close_message: "Questa finestra dovrebbe chiudersi immediatamente. Alternativamente puoi chiuderla <a href=\"javascript:close_window();\">cliccando qui</a>."

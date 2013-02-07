@@ -17,8 +17,8 @@
       <br/>
       <div class="alert alert-<%= @status == :success ? "success" : "error" %>">
         <h4><%= @title %></h4>
-        <h1><%= @i18n.send(@status == :success ? :header_success : :header_failure) %></h1>
-        <p><%= @i18n.close_message %></p>
+        <h1><%= @i18n.template.send(@status == :success ? :header_success : :header_failure) %></h1>
+        <p><%= @i18n.template.close_message %></p>
       </div>
     </div>
   </body>

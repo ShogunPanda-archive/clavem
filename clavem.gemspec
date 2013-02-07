@@ -9,7 +9,7 @@ require File.expand_path('../lib/clavem/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.name = "clavem"
   gem.version = Clavem::Version::STRING
-  gem.homepage = "http://github.com/ShogunPanda/clavem"
+  gem.homepage = "http://sw.cow.tc/clavem"
   gem.summary = "A local callback server for oAuth web-flow."
   gem.description = "A local callback server for oAuth web-flow."
   gem.rubyforge_project = "clavem"
@@ -22,18 +22,8 @@ Gem::Specification.new do |gem|
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.required_ruby_version = ">= 1.9.2"
+  gem.required_ruby_version = ">= 1.9.3"
 
-  gem.add_dependency("r18n-desktop", "~> 1.1.3")
-  gem.add_dependency("lazier", "~> 1.0.7")
-  gem.add_dependency("mamertes", "~> 1.2.0")
+  gem.add_dependency("mamertes", "~> 2.0.0")
   gem.add_dependency("webrick", "~> 1.3.1")
-
-  gem.add_development_dependency("rspec", "~> 2.12.0")
-  gem.add_development_dependency("rake", "~> 10.0.3")
-  gem.add_development_dependency("simplecov", "~> 0.7.1")
-  gem.add_development_dependency("pry", ">= 0.9.11.4")
-  gem.add_development_dependency("yard", "~> 0.8.3")
-  gem.add_development_dependency("redcarpet", "~> 2.2.2")
-  gem.add_development_dependency("github-markup", "~> 0.7.5")
 end
