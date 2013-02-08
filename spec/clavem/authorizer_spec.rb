@@ -243,7 +243,6 @@ describe Clavem::Authorizer do
 
       thread = authorizer.instance_variable_get(:@timeout_thread)
       expect(thread).to be_a(Thread)
-      expect(thread.stop?).to be_true
       expect(authorizer.instance_variable_get(:@timeout_expired)).to be_true
     end
   end
