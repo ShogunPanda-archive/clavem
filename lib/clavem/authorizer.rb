@@ -25,17 +25,28 @@ module Clavem
 
   # A class to handle oAuth authorizations.
   #
-  # @attr [String] url The URL where to send the user to start authorization..
-  # @attr [String] ip The IP address on which listening for replies. Default is `127.0.0.1`.
-  # @attr [Fixnum] port The port on which listening for replies. Default is `2501`.
-  # @attr [String] command The command to open the URL. `{{URL}}` is replaced with the specified URL. Default is `open "{{URL}}"`.
-  # @attr [String] title The title for response template. Default is `Clavem Authorization`.
-  # @attr [String] template Alternative template to show progress in user's browser.
-  # @attr [Fixnum] timeout The amount of milliseconds to wait for response from the remote endpoint before returning a failure. Default is `0`, which means *disabled*.
-  # @attr [Proc] response_handler A Ruby block to handle response and check for success. @see {#default_response_handler}.
-  # @attr [String] token The token obtained by the remote endpoint.
-  # @attr [Symbol] token The status of the request. Can be `:success`, `:denied`, `:failure` and `:waiting`.
-  # @attr [R18N::Translation] localizer A localizer object.
+  # @attribute url
+  #   @return [String] The URL where to send the user to start authorization..
+  # @attribute ip
+  #   @return [String] The IP address on which listening for replies. Default is `127.0.0.1`.
+  # @attribute port
+  #   @return [Fixnum] The port on which listening for replies. Default is `2501`.
+  # @attribute command
+  #   @return [String] The command to open the URL. `{{URL}}` is replaced with the specified URL. Default is `open "{{URL}}"`.
+  # @attribute title
+  #   @return [String] The title for response template. Default is `Clavem Authorization`.
+  # @attribute template
+  #   @return [String] Alternative template to show progress in user's browser.
+  # @attribute timeout
+  #   @return [Fixnum] The amount of milliseconds to wait for response from the remote endpoint before returning a failure. Default is `0`, which means *disabled*.
+  # @attribute response_handler
+  #   @return [Proc] A Ruby block to handle response and check for success. @see {#default_response_handler}.
+  # @attribute token
+  #   @return [String] The token obtained by the remote endpoint.
+  # @attribute token
+  #   @return [Symbol] The status of the request. Can be `:success`, `:denied`, `:failure` and `:waiting`.
+  # @attribute localizer
+  #   @return [R18N::Translation] A localizer object.
   class Authorizer
     include R18n::Helpers
     attr_accessor :url
@@ -197,7 +208,7 @@ module Clavem
 
       # Prepare the webserver for handling the response.
       def setup_webserver
-        @server = ::WEBrick::HTTPServer.new(BindAddress: @ip, Port: @port, Logger: WEBrick::Log.new("/dev/null"), AccessLog: [nil, nil])
+        @server = ::WEBrick::HTTPServer.new(:BindAddress => @ip, :Port => @port, :Logger => WEBrick::Log.new("/dev/null"), :AccessLog => [nil, nil])
         @server.mount_proc("/"){ |request, response| dispatch_request(request, response) }
       end
 

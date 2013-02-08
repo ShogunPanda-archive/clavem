@@ -17,10 +17,10 @@ Mamertes.App(name: "Clavem", version: Clavem::Version::STRING, description: "A l
   # @param template [String|nil] Alternative template to show progress in user's browser.
   # @param timeout [Fixnum] The amount of seconds to wait for response from the remote endpoint before returning a failure. Default is `0`, which means *disabled*.
 
-  option(:url, ["u", "url"], {type: String, help: "The URL where to send the user to start authorization.", meta: "URL", :required => true})
+  option(:url, ["u", "url"], {type: String, help: "The URL where to send the user to start authorization.", meta: "URL", required: true})
   option(:ip, ["i", "ip"], {type: String, help: "The IP address on which listening for replies. Default is 127.0.0.1.", meta: "IP", default: "127.0.0.1"})
   option(:port, ["p", "port"], {type: Integer, help: "The port on which listening for replies. Default is `2501`.", meta: "PORT", default: 2501})
-  option(:command, ["c", "command"], {type: String, help: "The command to open the URL. {{URL}} is replaced with the specified URL. Default is 'open \"{{URL}}\"'.", meta: "COMMAND", :default => "open \"{{URL}}\""})
+  option(:command, ["c", "command"], {type: String, help: "The command to open the URL. {{URL}} is replaced with the specified URL. Default is 'open \"{{URL}}\"'.", meta: "COMMAND", default: "open \"{{URL}}\""})
   option(:title, ["t", "title"], {type: String, help: "The title for response template. Default is \"Clavem Authorization\".", meta: "TITLE"})
   option(:template, ["v", "template"], {type: String, help: "Alternative template to show progress in user's browser.", meta: "TEMPLATE"})
   option(:timeout, ["n", "timeout"], {type: Integer, help: "The amount of seconds to wait for response from the remote endpoint before returning a failure.", meta: "TIMEOUT"})
