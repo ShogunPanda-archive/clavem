@@ -1,8 +1,9 @@
 # Introduction
 
-[![Build Status](https://secure.travis-ci.org/ShogunPanda/clavem.png?branch=master)](https://travis-ci.org/ShogunPanda/clavem)
+[![Gem Version](https://badge.fury.io/rb/clavem.png)](http://badge.fury.io/rb/clavem)
 [![Dependency Status](https://gemnasium.com/ShogunPanda/clavem.png?travis)](https://gemnasium.com/ShogunPanda/clavem)
-[![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/ShogunPanda/clavem)
+[![Build Status](https://secure.travis-ci.org/ShogunPanda/clavem.png?branch=master)](http://travis-ci.org/ShogunPanda/clavem)
+[![Code Climate](https://codeclimate.com/github/ShogunPanda/clavem.png)](https://codeclimate.com/github/ShogunPanda/clavem)
 
 A local callback server for oAuth web-flow.
 
@@ -19,7 +20,7 @@ Simply instantiate the authorizer and run the authorize method with the URL:
 ```
 require "clavem"
 
-# Initalize your oAuth access.
+# Initialize your oAuth access.
 
 authorizer = Clavem::Authorizer.new
 
@@ -28,7 +29,7 @@ authorizer = Clavem::Authorizer.new
 url += "?oauth_callback=#{authorizer.callback_url}"
 authorizer.authorize(url)
 
-if authorizer.status == :succeded then
+if authorizer.status == :succeeded then
   access_token = authorizer.token
 
   # Go on!

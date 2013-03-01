@@ -11,6 +11,6 @@
       response_failure: "Cannot handle response: %1"
       open_failure: "Cannot open URL %1: %2"
     template:
-      header_success: "Authentication succeded!"
+      header_success: "Authentication succeeded!"
       header_failure: "Authentication failed!"
       close_message: "This window should close immediately. Alternatively you can close it by <a href=\"javascript:close_window();\">clicking here</a>."
