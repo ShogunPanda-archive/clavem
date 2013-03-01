@@ -17,7 +17,7 @@ clavem allows you to handle a full oAuth authentication flow directly from the c
 
 Simply instantiate the authorizer and run the authorize method with the URL:
 
-```
+```ruby
 require "clavem"
 
 # Initialize your oAuth access.
