@@ -6,7 +6,7 @@
 <title>
   File: README
   
-    &mdash; Documentation by YARD 0.8.4.1
+    &mdash; Documentation by YARD 0.8.5.2
   
 </title>
 
@@ -63,9 +63,10 @@
 
     <div id="content"><div id='filecontents'><h1 id="introduction">Introduction</h1>
 
-<p><a href="https://travis-ci.org/ShogunPanda/clavem"><img src="https://secure.travis-ci.org/ShogunPanda/clavem.png?branch=master" alt="Build Status" /></a>
+<p><a href="http://badge.fury.io/rb/clavem"><img src="https://badge.fury.io/rb/clavem.png" alt="Gem Version" /></a>
 <a href="https://gemnasium.com/ShogunPanda/clavem"><img src="https://gemnasium.com/ShogunPanda/clavem.png?travis" alt="Dependency Status" /></a>
-<a href="https://codeclimate.com/github/ShogunPanda/clavem"><img src="https://codeclimate.com/badge.png" alt="Code Climate" /></a></p>
+<a href="http://travis-ci.org/ShogunPanda/clavem"><img src="https://secure.travis-ci.org/ShogunPanda/clavem.png?branch=master" alt="Build Status" /></a>
+<a href="https://codeclimate.com/github/ShogunPanda/clavem"><img src="https://codeclimate.com/github/ShogunPanda/clavem.png" alt="Code Climate" /></a></p>
 
 <p>A local callback server for oAuth web-flow.</p>
 
@@ -82,7 +83,7 @@
 <p>```
 require &#8220;clavem&#8221;</p>
 
-<h1 id="initalize-your-oauth-access">Initalize your oAuth access.</h1>
+<h1 id="initialize-your-oauth-access">Initialize your oAuth access.</h1>
 
 <p>authorizer = Clavem::Authorizer.new</p>
 
@@ -91,7 +92,7 @@ require &#8220;clavem&#8221;</p>
 <p>url += &#8220;?oauth_callback=#authorizerauthorizer.callback_url&#8221;
 authorizer.authorize(url)</p>
 
-<p>if authorizer.status == :succeded then
+<p>if authorizer.status == :succeeded then
   access_token = authorizer.token</p>
 
 <p># Go on!
@@ -124,9 +125,9 @@ end
 </div></div>
 
     <div id="footer">
-  Generated on Fri Feb  8 19:25:39 2013 by
+  Generated on Fri Mar  1 08:33:20 2013 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.4.1 (ruby-1.9.3).
+  0.8.5.2 (ruby-1.9.3).
 </div>
 
   </body>
