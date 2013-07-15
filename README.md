@@ -4,6 +4,7 @@
 [![Dependency Status](https://gemnasium.com/ShogunPanda/clavem.png?travis)](https://gemnasium.com/ShogunPanda/clavem)
 [![Build Status](https://secure.travis-ci.org/ShogunPanda/clavem.png?branch=master)](http://travis-ci.org/ShogunPanda/clavem)
 [![Code Climate](https://codeclimate.com/github/ShogunPanda/clavem.png)](https://codeclimate.com/github/ShogunPanda/clavem)
+[![Coverage Status](https://coveralls.io/repos/ShogunPanda/clavem/badge.png)](https://coveralls.io/r/ShogunPanda/clavem)
 
 A local callback server for oAuth web-flow.
 

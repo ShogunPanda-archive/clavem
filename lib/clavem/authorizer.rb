@@ -208,7 +208,7 @@ module Clavem
 
       # Prepare the webserver for handling the response.
       def setup_webserver
-        @server = ::WEBrick::HTTPServer.new(:BindAddress => @ip, :Port => @port, :Logger => WEBrick::Log.new("/dev/null"), :AccessLog => [nil, nil])
+        @server = ::WEBrick::HTTPServer.new(BindAddress: @ip, Port: @port, Logger: WEBrick::Log.new("/dev/null"), AccessLog: [nil, nil])
         @server.mount_proc("/"){ |request, response| dispatch_request(request, response) }
       end
 
