@@ -156,7 +156,7 @@ module Clavem
     # @param [WEBrick::HTTPRequest] request The request that the remote endpoint made to notify authorization status.
     # @param [WEBrick::HTTPResponse] response The request to send to the browser.
     # @return [String|nil] The oAuth access token. Returning `nil` means *authorization denied*.
-    def default_response_handler(_, request, _)
+    def default_response_handler(authorizer, request, response)
       request.query['oauth_token'].ensure_string
     end
 
