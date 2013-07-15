@@ -10,7 +10,7 @@ require "mamertes"
 
 Mamertes.App(name: "Clavem", version: Clavem::Version::STRING, description: "A local callback server for oAuth web-flow.") do
   option(:url, ["u", "url"], {type: String, help: "The URL where to send the user to start authorization.", meta: "URL", required: true})
-  option(:ip, ["i", "ip"], {type: String, help: "The IP address on which listening for replies. Default is 127.0.0.1.", meta: "IP", default: "127.0.0.1"})
+  option(:host, ["i", "host"], {type: String, help: "The host address on which listening for replies. Default is localhost.", meta: "HOST", default: "localhost"})
   option(:port, ["p", "port"], {type: Integer, help: "The port on which listening for replies. Default is `2501`.", meta: "PORT", default: 2501})
   option(:command, ["c", "command"], {type: String, help: "The command to open the URL. {{URL}} is replaced with the specified URL. Default is 'open \"{{URL}}\"'.", meta: "COMMAND", default: "open \"{{URL}}\""})
   option(:title, ["t", "title"], {type: String, help: "The title for response template. Default is \"Clavem Authorization\".", meta: "TITLE"})
@@ -22,9 +22,9 @@ Mamertes.App(name: "Clavem", version: Clavem::Version::STRING, description: "A l
     quiet = command.options["quiet"].value
     authorizer = nil
 
-    command.console.task(!quiet ? "Running Clavem on #{command.options["ip"].value}:#{command.options["port"].value}" : nil) do
+    command.console.task(!quiet ? "Running Clavem on #{command.options["host"].value}:#{command.options["port"].value}" : nil) do
       rv = :ok
-      authorizer = Clavem::Authorizer.instance(command.options["ip"].value, command.options["port"].value, command.options["command"].value, command.options["title"].value, command.options["template"].value, command.options["timeout"].value).authorize(command.options["url"].value)
+      authorizer = Clavem::Authorizer.instance(command.options["host"].value, command.options["port"].value, command.options["command"].value, command.options["title"].value, command.options["template"].value, command.options["timeout"].value).authorize(command.options["url"].value)
       rv
     end
 

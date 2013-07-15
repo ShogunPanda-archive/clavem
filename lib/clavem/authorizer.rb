@@ -27,8 +27,8 @@ module Clavem
   #
   # @attribute url
   #   @return [String] The URL where to send the user to start authorization..
-  # @attribute ip
-  #   @return [String] The IP address on which listening for replies. Default is `127.0.0.1`.
+  # @attribute host
+  #   @return [String] The host address on which listening for replies. Default is `localhost`.
   # @attribute port
   #   @return [Fixnum] The port on which listening for replies. Default is `2501`.
   # @attribute command
@@ -50,7 +50,7 @@ module Clavem
   class Authorizer
     include R18n::Helpers
     attr_accessor :url
-    attr_accessor :ip
+    attr_accessor :host
     attr_accessor :port
     attr_accessor :command
     attr_accessor :title
@@ -63,7 +63,7 @@ module Clavem
 
     # Returns a unique (singleton) instance of the authorizer.
     #
-    # @param ip [String] The IP address on which listening for replies. Default is `127.0.0.1`.
+    # @param host [String] The host address on which listening for replies. Default is `localhost`.
     # @param port [Fixnum] The port on which listening for replies. Default is `2501`.
     # @param command [String|nil] The command to open the URL. `{{URL}}` is replaced with the specified URL. Default is `open "{{URL}}"`.
     # @param title [String|nil] The title for response template. Default is `Clavem Authorization`
@@ -72,15 +72,15 @@ module Clavem
     # @param response_handler [Proc] A Ruby block to handle response and check for success. See {#default_response_handler}.
     # @param force [Boolean] If to force recreation of the instance.
     # @return [Authorizer] The unique (singleton) instance of the authorizer.
-    def self.instance(ip = "127.0.0.1", port = 2501, command = nil, title = nil, template = nil, timeout = 0, force = false, &response_handler)
+    def self.instance(host = "localhost", port = 2501, command = nil, title = nil, template = nil, timeout = 0, force = false, &response_handler)
       @instance = nil if force
-      @instance ||= Clavem::Authorizer.new(ip, port, command, title, template, timeout, &response_handler)
+      @instance ||= Clavem::Authorizer.new(host, port, command, title, template, timeout, &response_handler)
       @instance
     end
 
     # Creates a new authorizer.
     #
-    # @param ip [String] The IP address on which listening for replies. Default is `127.0.0.1`.
+    # @param host [String] The host address on which listening for replies. Default is `localhost`.
     # @param port [Fixnum] The port on which listening for replies. Default is `2501`.
     # @param command [String|nil] The command to open the URL. `{{URL}}` is replaced with the specified URL. Default is `open "{{URL}}"`.
     # @param title [String|nil] The title for response template. Default is `Clavem Authorization`
@@ -88,10 +88,10 @@ module Clavem
     # @param timeout [Fixnum] The amount of milliseconds to wait for response from the remote endpoint before returning a failure. Default is `0`, which means *disabled*.
     # @param response_handler [Proc] A Ruby block to handle response and check for success. See {#default_response_handler}.
     # @return [Authorizer] The new authorizer.
-    def initialize(ip = "127.0.0.1", port = 2501, command = nil, title = nil, template = nil, timeout = 0, &response_handler)
+    def initialize(host = "localhost", port = 2501, command = nil, title = nil, template = nil, timeout = 0, &response_handler)
       @i18n = self.localize
 
-      @ip = ip.ensure_string
+      @host = host.ensure_string
       @port = port.to_integer
       @command = command.ensure_string
       @title = title.ensure_string
@@ -147,7 +147,7 @@ module Clavem
     #
     # @return [String] The callback_url for this authorizer.
     def callback_url
-      "http://#{ip}:#{port}/"
+      "http://#{host}:#{port}/"
     end
 
     # Handles a response from the remote endpoint.
@@ -156,7 +156,7 @@ module Clavem
     # @param [WEBrick::HTTPRequest] request The request that the remote endpoint made to notify authorization status.
     # @param [WEBrick::HTTPResponse] response The request to send to the browser.
     # @return [String|nil] The oAuth access token. Returning `nil` means *authorization denied*.
-    def default_response_handler(authorizer, request, response)
+    def default_response_handler(_, request, _)
       request.query['oauth_token'].ensure_string
     end
 
@@ -172,7 +172,7 @@ module Clavem
     private
       # sanitize_arguments
       def sanitize_arguments
-        @ip = "127.0.0.1" if @ip.blank?
+        @host = "localhost" if @host.blank?
         @port = 2501 if @port.to_integer < 1
         @command = "open \"{{URL}}\"" if @command.blank?
         @title = @i18n.default_title if @title.blank?
@@ -208,7 +208,7 @@ module Clavem
 
       # Prepare the webserver for handling the response.
       def setup_webserver
-        @server = ::WEBrick::HTTPServer.new(BindAddress: @ip, Port: @port, Logger: WEBrick::Log.new("/dev/null"), AccessLog: [nil, nil])
+        @server = ::WEBrick::HTTPServer.new(BindAddress: @host, Port: @port, Logger: WEBrick::Log.new("/dev/null"), AccessLog: [nil, nil])
         @server.mount_proc("/"){ |request, response| dispatch_request(request, response) }
       end
 

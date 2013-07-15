@@ -40,8 +40,8 @@ describe Clavem::Authorizer do
 
   describe ".instance" do
     it("should call .new with the passed arguments") do
-      ::Clavem::Authorizer.should_receive(:new).with("IP", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT")
-      ::Clavem::Authorizer.instance("IP", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT")
+      ::Clavem::Authorizer.should_receive(:new).with("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT")
+      ::Clavem::Authorizer.instance("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT")
     end
 
     it("should return the same instance") do
@@ -53,14 +53,14 @@ describe Clavem::Authorizer do
     it("should return a new instance if requested to") do
       ::Clavem::Authorizer.stub(:new) { Time.now }
       authorizer = ::Clavem::Authorizer.instance("FIRST")
-      expect(::Clavem::Authorizer.instance("IP", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT", true)).not_to be(authorizer)
+      expect(::Clavem::Authorizer.instance("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT", true)).not_to be(authorizer)
     end
   end
 
   describe "#initialize" do
     it("should handle default arguments") do
       authorizer = ::Clavem::Authorizer.new
-      expect(authorizer.ip).to eq("127.0.0.1")
+      expect(authorizer.host).to eq("localhost")
       expect(authorizer.port).to eq(2501)
       expect(authorizer.command).to eq("open \"{{URL}}\"")
       expect(authorizer.title).to eq("Clavem Authorization")
@@ -70,8 +70,8 @@ describe Clavem::Authorizer do
     end
 
     it("should assign arguments") do
-      authorizer = ::Clavem::Authorizer.new("IP", 2511, "COMMAND", "TITLE", "TEMPLATE", 2) do end
-      expect(authorizer.ip).to eq("IP")
+      authorizer = ::Clavem::Authorizer.new("HOST", 2511, "COMMAND", "TITLE", "TEMPLATE", 2) do end
+      expect(authorizer.host).to eq("HOST")
       expect(authorizer.port).to eq(2511)
       expect(authorizer.command).to eq("COMMAND")
       expect(authorizer.title).to eq("TITLE")
@@ -157,7 +157,7 @@ describe Clavem::Authorizer do
 
   describe "#callback_url" do
     it("should return the correct callback") do
-      expect(::Clavem::Authorizer.new.callback_url).to eq("http://127.0.0.1:2501/")
+      expect(::Clavem::Authorizer.new.callback_url).to eq("http://localhost:2501/")
       expect(::Clavem::Authorizer.new("10.0.0.1", "80").callback_url).to eq("http://10.0.0.1:80/")
     end
   end
@@ -201,7 +201,7 @@ describe Clavem::Authorizer do
       instance.send(:open_endpoint)
 
       Kernel.should_receive(:system).with("COMMAND")
-      ::Clavem::Authorizer.new("IP", "PORT", "COMMAND").send(:open_endpoint)
+      ::Clavem::Authorizer.new("HOST", "PORT", "COMMAND").send(:open_endpoint)
     end
 
     it("should raise exception in case of failures") do
@@ -223,7 +223,7 @@ describe Clavem::Authorizer do
   describe "#setup_timeout_handling" do
     it("should not set a timeout handler by default") do
       authorizer = ::Clavem::Authorizer.new
-      authorizer.stub(:open_endpoint) do end
+      authorizer.stub(:open_endpoint)
       authorizer.stub(:setup_webserver) do authorizer.instance_variable_set(:@server, ::ClavemDummyServer.new) end
       authorizer.authorize("URL")
       expect(authorizer.instance_variable_get(:@timeout_handler)).to be_nil
@@ -236,7 +236,7 @@ describe Clavem::Authorizer do
       server = ::ClavemDummyServer.new
       server.stub(:start) do sleep(1) end
 
-      authorizer = ::Clavem::Authorizer.new("IP", "PORT", "COMMAND", "TITLE", "TEMPLATE", 500)
+      authorizer = ::Clavem::Authorizer.new("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE", 500)
       authorizer.stub(:open_endpoint) do end
       authorizer.stub(:setup_webserver) do authorizer.instance_variable_set(:@server, server) end
       expect { authorizer.authorize("URL") }.to raise_error(::Clavem::Exceptions::Timeout)
@@ -260,7 +260,7 @@ describe Clavem::Authorizer do
     it "should setup a single request handler on /" do
       server = ::ClavemDummyServer.new
       ::WEBrick::HTTPServer.stub(:new).and_return(server)
-      authorizer = ::Clavem::Authorizer.new("IP", "PORT")
+      authorizer = ::Clavem::Authorizer.new("HOST", "PORT")
       server.should_receive(:mount_proc).with("/")
       authorizer.send(:setup_webserver)
     end
@@ -324,7 +324,7 @@ describe Clavem::Authorizer do
       server = ::ClavemDummyServer.new
       server.stub(:start) do sleep(1) end
 
-      authorizer = ::Clavem::Authorizer.new("IP", "PORT", "COMMAND", "TITLE", "TEMPLATE")
+      authorizer = ::Clavem::Authorizer.new("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE")
       authorizer.stub(:open_endpoint) do end
       authorizer.stub(:setup_webserver) do authorizer.instance_variable_set(:@server, server) end
       authorizer.authorize("URL")
@@ -342,7 +342,7 @@ describe Clavem::Authorizer do
       server = ::ClavemDummyServer.new
       server.stub(:start) do sleep(1) end
 
-      authorizer = ::Clavem::Authorizer.new("IP", "PORT", "COMMAND", "TITLE", "TEMPLATE", 5000)
+      authorizer = ::Clavem::Authorizer.new("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE", 5000)
       authorizer.send(:setup_timeout_handling)
       thread = authorizer.instance_variable_get(:@timeout_thread)
       thread.should_receive(:exit)
