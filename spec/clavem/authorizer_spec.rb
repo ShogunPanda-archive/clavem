@@ -45,13 +45,13 @@ describe Clavem::Authorizer do
     end
 
     it("should return the same instance") do
-      ::Clavem::Authorizer.stub(:new) do Time.now end
+      ::Clavem::Authorizer.stub(:new) { Time.now }
       authorizer = ::Clavem::Authorizer.instance("FIRST")
       expect(::Clavem::Authorizer.instance("SECOND")).to be(authorizer)
     end
 
     it("should return a new instance if requested to") do
-      ::Clavem::Authorizer.stub(:new) do Time.now end
+      ::Clavem::Authorizer.stub(:new) { Time.now }
       authorizer = ::Clavem::Authorizer.instance("FIRST")
       expect(::Clavem::Authorizer.instance("IP", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT", true)).not_to be(authorizer)
     end

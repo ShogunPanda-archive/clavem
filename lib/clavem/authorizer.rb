@@ -217,7 +217,7 @@ module Clavem
       # @param [WEBrick::HTTPRequest] request The request that the remote endpoint made to notify authorization status.
       # @param [WEBrick::HTTPResponse] response The request to send to the browser.
       def dispatch_request(request, response)
-        @token = @response_handler ? @response_handler.call(self, request, response) : self.default_response_handler(self, request, response)
+        @token = @response_handler ? @response_handler.call(self, request, response) : default_response_handler(self, request, response)
 
         if @status == :waiting then
           if @token.present? then
