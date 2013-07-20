@@ -39,18 +39,18 @@ describe Clavem::Authorizer do
   let(:instance){::Clavem::Authorizer.new}
 
   describe ".instance" do
-    it("should call .new with the passed arguments") do
+    it "should call .new with the passed arguments" do
       expect(::Clavem::Authorizer).to receive(:new).with("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT")
       ::Clavem::Authorizer.instance("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT")
     end
 
-    it("should return the same instance") do
+    it "should return the same instance" do
       allow(::Clavem::Authorizer).to receive(:new) { Time.now }
       authorizer = ::Clavem::Authorizer.instance("FIRST")
       expect(::Clavem::Authorizer.instance("SECOND")).to be(authorizer)
     end
 
-    it("should return a new instance if requested to") do
+    it "should return a new instance if requested to" do
       allow(::Clavem::Authorizer).to receive(:new) { Time.now }
       authorizer = ::Clavem::Authorizer.instance("FIRST")
       expect(::Clavem::Authorizer.instance("HOST", "PORT", "COMMAND", "TITLE", "TEMPLATE", "TIMEOUT", true)).not_to be(authorizer)
@@ -58,7 +58,7 @@ describe Clavem::Authorizer do
   end
 
   describe "#initialize" do
-    it("should handle default arguments") do
+    it "should handle default arguments" do
       authorizer = ::Clavem::Authorizer.new
       expect(authorizer.host).to eq("localhost")
       expect(authorizer.port).to eq(2501)
@@ -69,7 +69,7 @@ describe Clavem::Authorizer do
       expect(authorizer.response_handler).to be_nil
     end
 
-    it("should assign arguments") do
+    it "should assign arguments" do
       authorizer = ::Clavem::Authorizer.new("HOST", 2511, "COMMAND", "TITLE", "TEMPLATE", 2) do end
       expect(authorizer.host).to eq("HOST")
       expect(authorizer.port).to eq(2511)
@@ -80,25 +80,25 @@ describe Clavem::Authorizer do
       expect(authorizer.response_handler).to be_a(Proc)
     end
 
-    it("should correct wrong arguments") do
+    it "should correct wrong arguments" do
       authorizer = ::Clavem::Authorizer.new("IP", -10, nil, nil, "", -1)
       expect(authorizer.port).to eq(2501)
       expect(authorizer.timeout).to eq(0)
     end
 
-    it("should setup internal status") do
+    it "should setup internal status" do
       authorizer = ::Clavem::Authorizer.new
       expect(authorizer.token).to be_nil
       expect(authorizer.status).to eq(:waiting)
     end
 
-    it("should return self") do
+    it "should return self" do
       expect(::Clavem::Authorizer.new).to be_a(::Clavem::Authorizer)
     end
   end
 
   describe "#authorize" do
-    it("should call the correct authorize sequence and then return self") do
+    it "should call the correct authorize sequence and then return self" do
       sequence = []
       instance = ::Clavem::Authorizer.new
       server = ::ClavemDummyServer.new
@@ -116,21 +116,21 @@ describe Clavem::Authorizer do
       expect(sequence).to eq([1, 2, 3, 4])
     end
 
-    it("should raise an exception in case of timeout") do
+    it "should raise an exception in case of timeout" do
       instance = ::Clavem::Authorizer.new
       allow(instance).to receive(:setup_webserver).and_raise(::Clavem::Exceptions::Timeout)
       expect { instance.authorize("URL") }.to raise_error(::Clavem::Exceptions::Timeout)
       expect(instance.status).to eq(:failure)
     end
 
-    it("should raise an exception in case of errors") do
+    it "should raise an exception in case of errors" do
       instance = ::Clavem::Authorizer.new
       allow(instance).to receive(:setup_webserver).and_raise(ArgumentError)
       expect { instance.authorize("URL") }.to raise_error(::Clavem::Exceptions::Failure)
       expect(instance.status).to eq(:failure)
     end
 
-    it("should always run #cleanup") do
+    it "should always run #cleanup" do
       cleaned = false
       instance = ::Clavem::Authorizer.new
       allow(instance).to receive(:cleanup) do cleaned = true end
@@ -156,19 +156,19 @@ describe Clavem::Authorizer do
   end
 
   describe "#callback_url" do
-    it("should return the correct callback") do
+    it "should return the correct callback" do
       expect(::Clavem::Authorizer.new.callback_url).to eq("http://localhost:2501/")
       expect(::Clavem::Authorizer.new("10.0.0.1", "80").callback_url).to eq("http://10.0.0.1:80/")
     end
   end
 
   describe "#default_response_handler" do
-    it("should return the token") do
+    it "should return the token" do
       instance = ::Clavem::Authorizer.new
       expect(instance.default_response_handler(instance, ::ClavemDummyRequest.new("TOKEN"), nil)).to eq("TOKEN")
     end
 
-    it("should return an empty string by default") do
+    it "should return an empty string by default" do
       instance = ::Clavem::Authorizer.new
       expect(instance.default_response_handler(instance, ::ClavemDummyRequest.new(nil), nil)).to eq("")
     end
@@ -195,7 +195,7 @@ describe Clavem::Authorizer do
 
   # PRIVATE
   describe "#open_endpoint" do
-    it("should call system with the right command") do
+    it "should call system with the right command" do
       expect(Kernel).to receive(:system).with("open \"URL\"")
       instance.instance_variable_set(:@url, "URL")
       instance.send(:open_endpoint)
@@ -204,14 +204,14 @@ describe Clavem::Authorizer do
       ::Clavem::Authorizer.new("HOST", "PORT", "COMMAND").send(:open_endpoint)
     end
 
-    it("should raise exception in case of failures") do
+    it "should raise exception in case of failures" do
       allow(Kernel).to receive(:system).and_raise(RuntimeError)
       expect { instance.send(:open_endpoint) }.to raise_error(::Clavem::Exceptions::Failure)
     end
   end
 
   describe "#setup_interruptions_handling" do
-    it("should add handler for SIGINT, SIGTERM, SIGKILL") do
+    it "should add handler for SIGINT, SIGTERM, SIGKILL" do
       expect(Kernel).to receive(:trap).with("USR2")
       expect(Kernel).to receive(:trap).with("INT")
       expect(Kernel).to receive(:trap).with("TERM")
@@ -221,7 +221,7 @@ describe Clavem::Authorizer do
   end
 
   describe "#setup_timeout_handling" do
-    it("should not set a timeout handler by default") do
+    it "should not set a timeout handler by default" do
       authorizer = ::Clavem::Authorizer.new
       allow(authorizer).to receive(:open_endpoint)
       allow(authorizer).to receive(:setup_webserver) do authorizer.instance_variable_set(:@server, ::ClavemDummyServer.new) end
@@ -229,7 +229,7 @@ describe Clavem::Authorizer do
       expect(authorizer.instance_variable_get(:@timeout_handler)).to be_nil
     end
 
-    it("should set and execute a timeout handler") do
+    it "should set and execute a timeout handler" do
       expect(Process).to receive(:kill).with("USR2", 0)
       expect(Kernel).to receive(:sleep).with(0.5)
 
