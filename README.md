@@ -25,17 +25,18 @@ require "clavem"
 
 authorizer = Clavem::Authorizer.new
 
-# Get your authorization URL and append the callback.
-
-url += "?oauth_callback=#{authorizer.callback_url}"
+# Get the token
+# You can also handle callback parameter by yourself.
+# url += "?oauth_callback=#{authorizer.callback_url}"
+# authorizer.authorize(url, false)
 authorizer.authorize(url)
 
-if authorizer.status == :succeeded then
+if authorizer.succeeded? then
   access_token = authorizer.token
 
   # Go on!
 else
-  # Authorization denied
+  # Authorization denied or failed
 end
 ```
 
@@ -55,6 +56,6 @@ See the [documentation](http://rdoc.info/gems/clavem) for more information.
 
 ## Copyright
 
-Copyright (C) 2013 and above Shogun (shogun_panda@me.com).
+Copyright (C) 2013 and above Shogun (shogun@cowtech.it).
 
 Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.

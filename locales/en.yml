@@ -1,16 +1,25 @@
 # encoding: utf-8
 #
-# This file is part of the clavem gem. Copyright (C) 2013 and above Shogun <shogun_panda@me.com>.
+# This file is part of the clavem gem. Copyright (C) 2013 and above Shogun <shogun@cowtech.it>.
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
 ---
   clavem:
-    default_title: "Clavem Authorization"
     errors:
       response_failure: "Cannot handle response: %1"
       open_failure: "Cannot open URL %1: %2"
-    template:
-      header_success: "Authentication succeeded!"
-      header_failure: "Authentication failed!"
-      close_message: "This window should close immediately. Alternatively you can close it by <a href=\"javascript:close_window();\">clicking here</a>."
+    template: "This window will close in few moments. If this doesn't happens you can close it by yourself, this won't cause any problem."
+    application_description: "A local callback server for oAuth web-flow."
+    application_help_url: "The URL where to send the user to start authorization."
+    application_help_host: "The host address on which listening for the reply. Default is localhost."
+    application_help_port: "The port on which listening for the reply. Default is 777`."
+    application_help_command: "The command to open the URL. {{URL} is replaced with the specified URL. Default is 'open \"{{URL}}\"'."
+    application_help_timeout: "The amount of seconds to wait for response from the remote endpoint before returning a failure."
+    application_help_quiet: "Do not print anything but errors."
+    application_meta_port: "PORT"
+    application_meta_command: "COMMAND"
+    cli_running: "Clavem is waiting for a response at URL {mark=bright}%1{/mark} ..."
+    cli_obtaining: "Obtaining token from URL {mark=bright}%1{/mark}."
+    cli_succeeded: "Obtained access token is: {mark=bright}%1{/mark}"
+    cli_failed: "No access token obtained."

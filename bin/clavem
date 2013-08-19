@@ -1,33 +1,44 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 #
-# This file is part of the clavem gem. Copyright (C) 2013 and above Shogun <shogun_panda@me.com>.
+# This file is part of the clavem gem. Copyright (C) 2013 and above Shogun <shogun@cowtech.it>.
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
+require "bovem"
 require "clavem"
-require "mamertes"
 
-Mamertes.App(name: "Clavem", version: Clavem::Version::STRING, description: "A local callback server for oAuth web-flow.") do
-  option(:url, ["u", "url"], {type: String, help: "The URL where to send the user to start authorization.", meta: "URL", required: true})
-  option(:host, ["i", "host"], {type: String, help: "The host address on which listening for replies. Default is localhost.", meta: "HOST", default: "localhost"})
-  option(:port, ["p", "port"], {type: Integer, help: "The port on which listening for replies. Default is `2501`.", meta: "PORT", default: 2501})
-  option(:command, ["c", "command"], {type: String, help: "The command to open the URL. {{URL}} is replaced with the specified URL. Default is 'open \"{{URL}}\"'.", meta: "COMMAND", default: "open \"{{URL}}\""})
-  option(:title, ["t", "title"], {type: String, help: "The title for response template. Default is \"Clavem Authorization\".", meta: "TITLE"})
-  option(:template, ["v", "template"], {type: String, help: "Alternative template to show progress in user's browser.", meta: "TEMPLATE"})
-  option(:timeout, ["n", "timeout"], {type: Integer, help: "The amount of seconds to wait for response from the remote endpoint before returning a failure.", meta: "TIMEOUT"})
-  option(:quiet, ["q", "quiet"], {help: "Do not print anything but errors."})
+Bovem::Application.create do
+  localizer = Lazier::Localizer.new(:clavem, ::File.absolute_path(::Pathname.new(::File.dirname(__FILE__)).to_s + "/../locales/")).i18n
+  name "Clavem"
+  description localizer.application_description
+  version Clavem::Version::STRING
+
+  option(:url, ["u", "url"], {type: String, help: localizer.application_help_url, meta: "URL", required: true})
+  option(:host, ["i", "host"], {type: String, help: localizer.application_help_host, meta: "HOST", default: "localhost"})
+  option(:port, ["p", "port"], {type: Integer, help: localizer.application_help_port, meta: localizer.application_meta_port, default: 7772})
+  option(:command, ["c", "command"], {type: String, help: localizer.application_help_command, meta: localizer.application_meta_command, default: "open \"{{URL}}\""})
+  option(:timeout, ["n", "timeout"], {type: Integer, help: localizer.application_help_timeout, meta: "TIMEOUT"})
+  option(:quiet, ["q", "quiet"], {help: localizer.application_help_quiet})
 
   action do |command|
-    quiet = command.options["quiet"].value
-    authorizer = nil
+    opts = command.get_options
+    quiet = opts["quiet"]
+    authorizer = Clavem::Authorizer.instance(opts["host"], opts["port"], opts["command"], opts["timeout"])
 
-    command.console.task(!quiet ? "Running Clavem on #{command.options["host"].value}:#{command.options["port"].value}" : nil) do
-      rv = :ok
-      authorizer = Clavem::Authorizer.instance(command.options["host"].value, command.options["port"].value, command.options["command"].value, command.options["title"].value, command.options["template"].value, command.options["timeout"].value).authorize(command.options["url"].value)
-      rv
+    command.console.info(localizer.cli_obtaining(opts["url"])) if !quiet
+    command.console.task(!quiet ? localizer.cli_running(authorizer.callback_url) : nil) do
+      begin
+        authorizer.authorize(opts["url"]) ? :ok : :fail
+      rescue Clavem::Exceptions::Failure => e
+        command.console.error(e.message)
+      end
     end
 
-    command.console.info("Obtained access token is: #{authorizer.token}") if !quiet
+    if authorizer.succeeded? then
+      command.console.info(localizer.cli_succeeded(authorizer.token)) if !quiet
+    else
+      command.console.error(localizer.cli_failed)
+    end
   end
 end
