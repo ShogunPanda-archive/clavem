@@ -22,7 +22,7 @@ module Clavem
 
     # Creates a new server.
     #
-    # @param authorizer [Authorizer] The authorized of this server.
+    # @param authorizer [Authorizer] The authorizer of this server.
     def initialize(authorizer)
       @authorizer = authorizer
     end
