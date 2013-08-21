@@ -89,11 +89,11 @@ module Clavem
     # @param url [String] The URL where to send the user to start authorization.
     # @param append_callback [Boolean] If to append the callback to the url using `oauth_callback` parameter.
     # @return [Boolean] `true` if authorization succeeded, `false` otherwise.
-    # TODO@SP: Test this
     def authorize(url, append_callback = true)
       url += "#{url.index("?") ? "&" : "?"}oauth_callback=#{callback_url}" if append_callback
       @url = url
       @status = :waiting
+      @token = nil
 
       begin
         perform_request
@@ -113,11 +113,10 @@ module Clavem
       "http://#{host}:#{port}/"
     end
 
-    # TODO@SP: Test this
     # Returns the response handler for the authorizer.
     #
     def response_handler
-      @response_handler || Proc.new {|querystring| (querystring["oauth_token"] || []).first }
+      @response_handler || Proc.new {|querystring| (querystring || {}).fetch("oauth_token", []).ensure_array.first }
     end
 
     # Set the current locale for messages.
@@ -129,7 +128,6 @@ module Clavem
       R18n::I18n.new([locale || :en, ENV["LANG"], R18n::I18n.system_locale].compact, @i18n_locales_path).t.clavem
     end
 
-    # TODO@SP: Test all these
     # Checks if authentication succeeded.
     #
     # @return [Boolean] `true` if authorization succeeded, `false otherwise`.

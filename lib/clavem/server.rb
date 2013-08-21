@@ -6,7 +6,6 @@
 
 module Clavem
   # A class to handle oAuth callbacks on the browser via HTTP.
-  # TODO@SP: Test this
   class Server < EM::Connection
     include EM::HttpServer
 

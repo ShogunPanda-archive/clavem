@@ -11,6 +11,7 @@ gemspec
 # Testing
 gem "rspec", "~> 2.14.1"
 gem "rake", "~> 10.1.0"
+gem "em-http-request", "~> 1.1.0"
 
 # Documentation
 gem "simplecov", ">= 0.7.1"

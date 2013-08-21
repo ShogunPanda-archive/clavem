@@ -44,6 +44,12 @@ Alternatively, you can also specify a timeout and a block to the constructor to 
 
 See the [documentation](http://rdoc.info/gems/clavem) for more information.
 
+## Use on jRuby
+
+To use on jRuby, you need to install a gem with C extensions which must be compiled.
+
+See jRuby documentation to see how to enabled extensions compilation.
+
 ## Contributing to clavem
  
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
