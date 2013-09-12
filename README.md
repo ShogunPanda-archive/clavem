@@ -27,7 +27,7 @@ authorizer = Clavem::Authorizer.new
 
 # Get the token
 # You can also handle callback parameter by yourself.
-# url += "?oauth_callback=#{authorizer.callback_url}"
+# url += "?oauth_callback=" + authorizer.callback_url
 # authorizer.authorize(url, false)
 authorizer.authorize(url)
 
