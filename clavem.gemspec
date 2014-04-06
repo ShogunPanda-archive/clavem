@@ -16,6 +16,7 @@ Gem::Specification.new do |gem|
 
   gem.authors = ["Shogun"]
   gem.email = ["shogun@cowtech.it"]
+  gem.license = "MIT"
 
   gem.files = `git ls-files`.split($\)
   gem.executables = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
@@ -24,7 +25,6 @@ Gem::Specification.new do |gem|
 
   gem.required_ruby_version = ">= 1.9.3"
 
-  gem.add_dependency("bovem", "~> 3.0.2")
-  gem.add_dependency("eventmachine", "~> 1.0.3")
-  gem.add_dependency("eventmachine_httpserver", "~> 0.2.1")
+  gem.add_dependency("bovem", "~> 3.0.5")
+  gem.add_dependency("addressable", "~> 2.3.6")
 end

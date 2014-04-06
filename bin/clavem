@@ -14,22 +14,25 @@ Bovem::Application.create do
   description localizer.application_description
   version Clavem::Version::STRING
 
-  option(:url, ["u", "url"], {type: String, help: localizer.application_help_url, meta: "URL", required: true})
-  option(:host, ["i", "host"], {type: String, help: localizer.application_help_host, meta: "HOST", default: "localhost"})
-  option(:port, ["p", "port"], {type: Integer, help: localizer.application_help_port, meta: localizer.application_meta_port, default: 7772})
-  option(:command, ["c", "command"], {type: String, help: localizer.application_help_command, meta: localizer.application_meta_command, default: "open \"{{URL}}\""})
-  option(:timeout, ["n", "timeout"], {type: Integer, help: localizer.application_help_timeout, meta: "TIMEOUT"})
-  option(:quiet, ["q", "quiet"], {help: localizer.application_help_quiet})
+  option(:url, [], {type: String, help: localizer.application_help_url, meta: "URL", required: true})
+  option(:host, [:i, "host"], {type: String, help: localizer.application_help_host, meta: "HOST", default: "localhost"})
+  option(:port, [], {type: Integer, help: localizer.application_help_port, meta: localizer.application_meta_port, default: 7772})
+  option(:command, [], {type: String, help: localizer.application_help_command, meta: localizer.application_meta_command, default: "open \"{{URL}}\""})
+  option(:skip_callback, [:C, "skip-callback"], {help: localizer.application_help_no_callback})
+  option(:timeout, [:n, "timeout"], {type: Integer, help: localizer.application_help_timeout, meta: "TIMEOUT"})
+  option(:quiet, [], {help: localizer.application_help_quiet})
 
   action do |command|
     opts = command.get_options
     quiet = opts["quiet"]
+    skip_callback = opts["skip_callback"]
+
     authorizer = Clavem::Authorizer.instance(opts["host"], opts["port"], opts["command"], opts["timeout"])
 
     command.console.info(localizer.cli_obtaining(opts["url"])) if !quiet
     command.console.task(!quiet ? localizer.cli_running(authorizer.callback_url) : nil) do
       begin
-        authorizer.authorize(opts["url"]) ? :ok : :fail
+        authorizer.authorize(opts["url"], !skip_callback) ? :ok : :fail
       rescue Clavem::Exceptions::Failure => e
         command.console.error(e.message)
       end

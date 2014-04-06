@@ -7,7 +7,6 @@
 require "rubygems"
 require "bundler/setup"
 require "clavem"
-require "em-http-request"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |c|

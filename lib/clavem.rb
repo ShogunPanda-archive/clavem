@@ -4,10 +4,8 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-require "r18n-desktop"
 require "lazier"
-require "eventmachine"
-require "evma_httpserver"
+require "addressable/uri"
 
 require "clavem/version" if !defined?(Clavem::Version)
 require "clavem/server"

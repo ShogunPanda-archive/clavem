@@ -6,17 +6,17 @@
 
 module Clavem
   # A class to handle oAuth callbacks on the browser via HTTP.
-  class Server < EM::Connection
-    include EM::HttpServer
-
+  class Server
     # The template to send to the browser.
     TEMPLATE = <<-EOTEMPLATE
 <html>
   <head>
     <title>Clavem</title>
-    <script type="text/javascript"> close_window = (function(){ window.open("", "_self", ""); window.close(); })(); </script>
+    <script type="text/javascript" charset="utf8">(function(){ window.open("", "_self", ""); window.close(); })();</script>
   </head>
-  <body><h4>%s</h4></body>
+  <body>
+    %s
+  </body>
 </html>
     EOTEMPLATE
 
@@ -25,12 +25,25 @@ module Clavem
     # @param authorizer [Authorizer] The authorizer of this server.
     def initialize(authorizer)
       @authorizer = authorizer
+
+      process_http_request
     end
 
     # Save the token and sends a response back to the user.
     def process_http_request
+      server = create_server
+      socket = server.accept
+
+      # Get the request
+      request = socket.gets.gsub(/^[A-Z]+\s(.+)\sHTTP.+$/, "\\1")
+      querystring = Addressable::URI.parse(("%s%s" % [@authorizer.callback_url, request]).strip).query_values
+
+      # Send the response and close the socket
+      send_response(socket)
+
       # Handle the token
-      token = @authorizer.response_handler.call(CGI::parse(@http_query_string))
+      token = @authorizer.response_handler.call(querystring)
+
       if token then
         @authorizer.token = token
         @authorizer.status = :succeeded
@@ -38,15 +51,28 @@ module Clavem
         @authorizer.status = :denied
       end
 
-      # Build the request
-      response = EM::DelegatedHttpResponse.new(self)
-      response.status = 200
-      response.content_type("text/html")
-      response.content = TEMPLATE % [@authorizer.i18n.template]
-      response.send_response
-
-      # Stop after serving the request.
-      EM.add_timer(0.1) { EM.stop }
+      server.close
     end
+
+    private
+      # Creates the server.
+      #
+      # @return [TCPServer] The TCP server
+      def create_server
+        server = TCPServer.new(@authorizer.host, @authorizer.port)
+        server.setsockopt(Socket::IPPROTO_TCP, Socket::TCP_NODELAY, 1)
+        server.setsockopt(:SOCKET, :REUSEADDR, 1)
+        server
+      end
+
+      # Sends the response to the client.
+      #
+      # @param socket [TCPSocket] The socket to the client.
+      def send_response(socket)
+        response = TEMPLATE % [@authorizer.i18n.template]
+        socket.print(["HTTP/1.1 200 OK", "Content-Type: text/html; charset=utf-8", "Content-Length: #{response.bytesize}", "Connection: close"].join("\r\n"))
+        socket.print("\r\n\r\n" + response)
+        socket.close
+      end
   end
 end

@@ -90,8 +90,10 @@ module Clavem
     # @param append_callback [Boolean] If to append the callback to the url using `oauth_callback` parameter.
     # @return [Boolean] `true` if authorization succeeded, `false` otherwise.
     def authorize(url, append_callback = true)
-      url += "#{url.index("?") ? "&" : "?"}oauth_callback=#{callback_url}" if append_callback
-      @url = url
+      url = Addressable::URI.parse(url)
+      url.query_values = (url.query_values || {}).merge({oauth_callback: callback_url}) if append_callback
+
+      @url = url.to_s
       @status = :waiting
       @token = nil
 
@@ -110,13 +112,13 @@ module Clavem
     #
     # @return [String] The callback_url for this authorizer.
     def callback_url
-      "http://#{host}:#{port}/"
+      Addressable::URI.new(scheme: "http", host: host, port: port).to_s
     end
 
     # Returns the response handler for the authorizer.
     #
     def response_handler
-      @response_handler || Proc.new {|querystring| (querystring || {}).fetch("oauth_token", []).ensure_array.first }
+      @response_handler || Proc.new {|querystring| (querystring || {})["oauth_token"] }
     end
 
     # Set the current locale for messages.
@@ -177,21 +179,15 @@ module Clavem
 
       # Processes the authentication response.
       def process_response
-        # Signal handling
-        ["INT", "TERM", "KILL"].each {|signal|
-          Kernel.trap(signal){ EM.stop }
-        }
+        begin
+          server = Thread.new do
+            Clavem::Server.new(self)
+          end
 
-        # Start eventmachine
-        EM.run do
-          EM.add_timer(@timeout){ handle_timeout } if @timeout > 0
-          EM.start_server(@host, @port, Clavem::Server, self)
+          server.join(@timeout > 0 ? @timeout : nil)
+        rescue Interrupt
+          raise Clavem::Exceptions::Failure.new(@i18n.errors.interrupted)
         end
-      end
-
-      # Handle timeouts.
-      def handle_timeout
-        EM.stop
       end
   end
 end

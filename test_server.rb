@@ -9,7 +9,7 @@ require "cgi"
 require "eventmachine"
 require "evma_httpserver"
 
-class ClavemServer < EM::Connection
+class ClavemTestServer < EM::Connection
   include EM::HttpServer
 
   def process_http_request
@@ -30,5 +30,6 @@ end
 }
 
 EM.run do
-  EM.start_server("0.0.0.0", 7779, ClavemServer)
+  puts "Listening on 0.0.0.0:7779 - Provide a token for a success, otherwise a failure will be triggered."
+  EM.start_server("0.0.0.0", 7779, ClavemTestServer)
 end

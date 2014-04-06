@@ -78,17 +78,17 @@ describe Clavem::Authorizer do
 
       expect(Kernel).to receive(:system).with("open \"URL?oauth_callback=CALLBACK\"")
       subject.authorize("URL")
-      expect(Kernel).to receive(:system).with("open \"URL?&oauth_callback=CALLBACK\"")
-      subject.authorize("URL?")
+      expect(Kernel).to receive(:system).with("open \"URL?a=b&oauth_callback=CALLBACK\"")
+      subject.authorize("URL?a=b")
       subject.command = "browse {{URL}}"
-      expect(Kernel).to receive(:system).with("browse URL?oauth_callback=CALLBACK")
-      subject.authorize("URL")
+      expect(Kernel).to receive(:system).with("browse URL")
+      subject.authorize("URL", false)
     end
 
     it "should start a server" do
       allow(subject).to receive(:perform_request)
       subject.timeout = 1
-      expect(EM).to receive(:start_server).with(subject.host, subject.port, Clavem::Server, subject)
+      expect(Clavem::Server).to receive(:new).with(subject)
       subject.authorize("URL")
     end
 
@@ -109,18 +109,25 @@ describe Clavem::Authorizer do
     end
 
     it "should handle timeouts" do
+      allow(Kernel).to receive(:system)
       allow(subject).to receive(:perform_request)
 
       subject.timeout = 1
-      expect(EM).to receive(:stop).and_call_original
       subject.authorize("URL")
+    end
+
+    it "should handle interruptions" do
+      allow(Kernel).to receive(:system)
+      allow(Clavem::Server).to receive(:new).and_raise(Interrupt)
+      expect { subject.authorize("URL") }.to raise_error(Clavem::Exceptions::Failure)
+      expect(subject.failed?).to be_true
     end
   end
 
   describe "#callback_url" do
     it "should return the correct callback" do
-      expect(::Clavem::Authorizer.new.callback_url).to eq("http://localhost:7772/")
-      expect(::Clavem::Authorizer.new("10.0.0.1", "80").callback_url).to eq("http://10.0.0.1:80/")
+      expect(::Clavem::Authorizer.new.callback_url).to eq("http://localhost:7772")
+      expect(::Clavem::Authorizer.new("10.0.0.1", "80").callback_url).to eq("http://10.0.0.1:80")
     end
   end
 
@@ -128,7 +135,6 @@ describe Clavem::Authorizer do
     it "should return the token as default implementation" do
       expect(subject.response_handler.call(nil)).to be_nil
       expect(subject.response_handler.call({"oauth_token" => "TOKEN"})).to eq("TOKEN")
-      expect(subject.response_handler.call({"oauth_token" => ["TOKEN 1", "TOKEN 2"]})).to eq("TOKEN 1")
     end
 
     it "should work as a getter" do
