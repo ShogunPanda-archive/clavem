@@ -28,7 +28,8 @@ module Clavem
   # @attribute timeout
   #   @return [Fixnum] The amount of seconds to wait for response from the remote endpoint before returning a failure. Default is `0`, which means *disabled*.
   # @attribute response_handler
-  #   @return [Proc] A Ruby block to handle response and check for success. The block must accept a querystring hash (which all values are arrays) and return a token or `nil` if the authentication was denied.
+  #   @return [Proc] A Ruby block to handle response and check for success.
+  #     The block must accept a querystring hash (which all values are arrays) and return a token or `nil` if the authentication was denied.
   # @attribute token
   #   @return [String] The token obtained by the remote endpoint.
   # @attribute status
@@ -52,7 +53,8 @@ module Clavem
     # @param host [String] The host address on which listening for replies. Default is `localhost`.
     # @param port [Fixnum] The port on which listening for replies. Default is `7772`.
     # @param command [String|nil] The command to open the URL. `{{URL}}` is replaced with the specified URL. Default is `open "{{URL}}"`.
-    # @param timeout [Fixnum] The amount of seconds to wait for response from the remote endpoint before returning a failure. Default is `0`, which means *disabled*.
+    # @param timeout [Fixnum] The amount of seconds to wait for response from the remote endpoint before returning a failure.
+    #   Default is `0`, which means *disabled*.
     # @param response_handler [Proc] A Ruby block to handle response and check for success. See {#response_handler}.
     # @param force [Boolean] If to force recreation of the instance.
     # @return [Authorizer] The unique (singleton) instance of the authorizer.
@@ -67,7 +69,8 @@ module Clavem
     # @param host [String] The host address on which listening for replies. Default is `localhost`.
     # @param port [Fixnum] The port on which listening for replies. Default is `7772`.
     # @param command [String|nil] The command to open the URL. `{{URL}}` is replaced with the specified URL. Default is `open "{{URL}}"`.
-    # @param timeout [Fixnum] The amount of seconds to wait for response from the remote endpoint before returning a failure. Default is `0`, which means *disabled*.
+    # @param timeout [Fixnum] The amount of seconds to wait for response from the remote endpoint before returning a failure.
+    #   Default is `0`, which means *disabled*.
     # @param response_handler [Proc] A Ruby block to handle response and check for success. See {#response_handler}.
     # @return [Authorizer] The new authorizer.
     def initialize(host = "localhost", port = 7772, command = nil, timeout = 0, &response_handler)
