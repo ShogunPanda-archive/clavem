@@ -6,7 +6,7 @@
 <title>
   Class: Clavem::Server
   
-    &mdash; Documentation by YARD 0.8.7
+    &mdash; Documentation by YARD 0.8.7.4
   
 </title>
 
@@ -17,7 +17,7 @@
 <script type="text/javascript" charset="utf-8">
   hasFrames = window.top.frames.main ? true : false;
   relpath = '../';
-  framesUrl = "../frames.html#!" + escape(window.location.href);
+  framesUrl = "../frames.html#!Clavem/Server.html";
 </script>
 
 
@@ -73,12 +73,10 @@
   
     <dt class="r1">Inherits:</dt>
     <dd class="r1">
-      <span class="inheritName">EM::Connection</span>
+      <span class="inheritName">Object</span>
       
         <ul class="fullTree">
           <li>Object</li>
-          
-            <li class="next">EM::Connection</li>
           
             <li class="next">Clavem::Server</li>
           
@@ -92,15 +90,11 @@
     
   
     
-      <dt class="r2">Includes:</dt>
-      <dd class="r2">EM::HttpServer</dd>
-      
-    
   
   
   
-    <dt class="r1 last">Defined in:</dt>
-    <dd class="r1 last">lib/clavem/server.rb</dd>
+    <dt class="r2 last">Defined in:</dt>
+    <dd class="r2 last">lib/clavem/server.rb</dd>
   
 </dl>
 <div class="clear"></div>
@@ -133,15 +127,8 @@
 
 </div>
         </dt>
-        <dd><pre class="code"><span class='heredoc_beg'>&lt;&lt;-EOTEMPLATE</span>
-<span class='tstring_content'>&lt;html&gt;
-  &lt;head&gt;
-&lt;title&gt;Clavem&lt;/title&gt;
-&lt;script type=&quot;text/javascript&quot;&gt; close_window = (function(){ window.open(&quot;&quot;, &quot;_self&quot;, &quot;&quot;); window.close(); })(); &lt;/script&gt;
-  &lt;/head&gt;
-  &lt;body&gt;&lt;h4&gt;%s&lt;/h4&gt;&lt;/body&gt;
-&lt;/html&gt;
-</span><span class='heredoc_end'>EOTEMPLATE</span></pre></dd>
+        <dd><pre class="code"><span class='string val'>&quot;&lt;html&gt;\n&lt;head&gt;\n&lt;title&gt;Clavem&lt;/title&gt;\n&lt;script type=\&quot;text/javascript\&quot; charset=\&quot;utf8\&quot;&gt;(function(){ window.open(\&quot;\&quot;, \&quot;_self\&quot;, \&quot;\&quot;); window.close(); })();&lt;/script&gt;\n&lt;/head&gt;\n&lt;body&gt;\n%s\n&lt;/body&gt;\n&lt;/html&gt;\n&quot;</span>
+</pre></dd>
       
     </dl>
   
@@ -211,9 +198,7 @@
     </ul>
   
 
-
-  
-  <div id="constructor_details" class="method_details_list">
+<div id="constructor_details" class="method_details_list">
   <h2>Constructor Details</h2>
   
     <div class="method_details first">
@@ -260,16 +245,21 @@
       <pre class="lines">
 
 
-26
 27
-28</pre>
+28
+29
+30
+31</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/clavem/server.rb', line 26</span>
+      <pre class="code"><span class="info file"># File 'lib/clavem/server.rb', line 27</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_authorizer'>authorizer</span><span class='rparen'>)</span>
-  <span class='ivar'>@authorizer</span> <span class='op'>=</span> <span class='id identifier rubyid_authorizer'>authorizer</span>
-<span class='kw'>end</span></pre>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_initialize identifier id'>initialize</span><span class='lparen token'>(</span><span class='rubyid_authorizer identifier id'>authorizer</span><span class='rparen token'>)</span>
+  <span class='rubyid_@authorizer ivar id'>@authorizer</span> <span class='assign token'>=</span> <span class='rubyid_authorizer identifier id'>authorizer</span>
+
+  <span class='rubyid_process_http_request identifier id'>process_http_request</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
     </td>
   </tr>
 </table>
@@ -307,9 +297,6 @@
       <pre class="lines">
 
 
-31
-32
-33
 34
 35
 36
@@ -326,31 +313,41 @@
 47
 48
 49
-50</pre>
+50
+51
+52
+53
+54
+55
+56</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/clavem/server.rb', line 31</span>
+      <pre class="code"><span class="info file"># File 'lib/clavem/server.rb', line 34</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_process_http_request'>process_http_request</span>
-  <span class='comment'># Handle the token
-</span>  <span class='id identifier rubyid_token'>token</span> <span class='op'>=</span> <span class='ivar'>@authorizer</span><span class='period'>.</span><span class='id identifier rubyid_response_handler'>response_handler</span><span class='period'>.</span><span class='id identifier rubyid_call'>call</span><span class='lparen'>(</span><span class='const'>CGI</span><span class='op'>::</span><span class='id identifier rubyid_parse'>parse</span><span class='lparen'>(</span><span class='ivar'>@http_query_string</span><span class='rparen'>)</span><span class='rparen'>)</span>
-  <span class='kw'>if</span> <span class='id identifier rubyid_token'>token</span> <span class='kw'>then</span>
-    <span class='ivar'>@authorizer</span><span class='period'>.</span><span class='id identifier rubyid_token'>token</span> <span class='op'>=</span> <span class='id identifier rubyid_token'>token</span>
-    <span class='ivar'>@authorizer</span><span class='period'>.</span><span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='symbol'>:succeeded</span>
-  <span class='kw'>else</span>
-    <span class='ivar'>@authorizer</span><span class='period'>.</span><span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='symbol'>:denied</span>
-  <span class='kw'>end</span>
+<span class='rubyid_def def kw'>def</span> <span class='rubyid_process_http_request identifier id'>process_http_request</span>
+  <span class='rubyid_server identifier id'>server</span> <span class='assign token'>=</span> <span class='rubyid_create_server identifier id'>create_server</span>
+  <span class='rubyid_socket identifier id'>socket</span> <span class='assign token'>=</span> <span class='rubyid_server identifier id'>server</span><span class='dot token'>.</span><span class='rubyid_accept identifier id'>accept</span>
 
-  <span class='comment'># Build the request
-</span>  <span class='id identifier rubyid_response'>response</span> <span class='op'>=</span> <span class='const'>EM</span><span class='op'>::</span><span class='const'>DelegatedHttpResponse</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_status'>status</span> <span class='op'>=</span> <span class='int'>200</span>
-  <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_content_type'>content_type</span><span class='lparen'>(</span><span class='tstring'><span class='tstring_beg'>&quot;</span><span class='tstring_content'>text/html</span><span class='tstring_end'>&quot;</span></span><span class='rparen'>)</span>
-  <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_content'>content</span> <span class='op'>=</span> <span class='const'>TEMPLATE</span> <span class='op'>%</span> <span class='lbracket'>[</span><span class='ivar'>@authorizer</span><span class='period'>.</span><span class='id identifier rubyid_i18n'>i18n</span><span class='period'>.</span><span class='id identifier rubyid_template'>template</span><span class='rbracket'>]</span>
-  <span class='id identifier rubyid_response'>response</span><span class='period'>.</span><span class='id identifier rubyid_send_response'>send_response</span>
+  <span class='comment val'># Get the request</span>
+  <span class='rubyid_request identifier id'>request</span> <span class='assign token'>=</span> <span class='rubyid_socket identifier id'>socket</span><span class='dot token'>.</span><span class='rubyid_gets identifier id'>gets</span><span class='dot token'>.</span><span class='rubyid_gsub identifier id'>gsub</span><span class='lparen token'>(</span><span class='regexp val'>/^[A-Z]+\s(.+)\sHTTP.+$/</span><span class='comma token'>,</span> <span class='string val'>&quot;\\1&quot;</span><span class='rparen token'>)</span>
+  <span class='rubyid_querystring identifier id'>querystring</span> <span class='assign token'>=</span> <span class='rubyid_Addressable constant id'>Addressable</span><span class='colon2 op'>::</span><span class='rubyid_URI constant id'>URI</span><span class='dot token'>.</span><span class='rubyid_parse identifier id'>parse</span><span class='lparen token'>(</span><span class='lparen token'>(</span><span class='string val'>&quot;%s%s&quot;</span> <span class='mod op'>%</span> <span class='lbrack token'>[</span><span class='rubyid_@authorizer ivar id'>@authorizer</span><span class='dot token'>.</span><span class='rubyid_callback_url identifier id'>callback_url</span><span class='comma token'>,</span> <span class='rubyid_request identifier id'>request</span><span class='rbrack token'>]</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_strip identifier id'>strip</span><span class='rparen token'>)</span><span class='dot token'>.</span><span class='rubyid_query_values identifier id'>query_values</span>
 
-  <span class='comment'># Stop after serving the request.
-</span>  <span class='const'>EM</span><span class='period'>.</span><span class='id identifier rubyid_add_timer'>add_timer</span><span class='lparen'>(</span><span class='float'>0.1</span><span class='rparen'>)</span> <span class='lbrace'>{</span> <span class='const'>EM</span><span class='period'>.</span><span class='id identifier rubyid_stop'>stop</span> <span class='rbrace'>}</span>
-<span class='kw'>end</span></pre>
+  <span class='comment val'># Send the response and close the socket</span>
+  <span class='rubyid_send_response identifier id'>send_response</span><span class='lparen token'>(</span><span class='rubyid_socket identifier id'>socket</span><span class='rparen token'>)</span>
+
+  <span class='comment val'># Handle the token</span>
+  <span class='rubyid_token identifier id'>token</span> <span class='assign token'>=</span> <span class='rubyid_@authorizer ivar id'>@authorizer</span><span class='dot token'>.</span><span class='rubyid_response_handler identifier id'>response_handler</span><span class='dot token'>.</span><span class='rubyid_call identifier id'>call</span><span class='lparen token'>(</span><span class='rubyid_querystring identifier id'>querystring</span><span class='rparen token'>)</span>
+
+  <span class='rubyid_if if kw'>if</span> <span class='rubyid_token identifier id'>token</span> <span class='rubyid_then then kw'>then</span>
+    <span class='rubyid_@authorizer ivar id'>@authorizer</span><span class='dot token'>.</span><span class='rubyid_token identifier id'>token</span> <span class='assign token'>=</span> <span class='rubyid_token identifier id'>token</span>
+    <span class='rubyid_@authorizer ivar id'>@authorizer</span><span class='dot token'>.</span><span class='rubyid_status identifier id'>status</span> <span class='assign token'>=</span> <span class='symbol val'>:succeeded</span>
+  <span class='rubyid_else else kw'>else</span>
+    <span class='rubyid_@authorizer ivar id'>@authorizer</span><span class='dot token'>.</span><span class='rubyid_status identifier id'>status</span> <span class='assign token'>=</span> <span class='symbol val'>:denied</span>
+  <span class='rubyid_end end kw'>end</span>
+
+  <span class='rubyid_server identifier id'>server</span><span class='dot token'>.</span><span class='rubyid_close identifier id'>close</span>
+<span class='rubyid_end end kw'>end</span>
+</pre>
     </td>
   </tr>
 </table>
@@ -361,9 +358,9 @@
 </div>
 
     <div id="footer">
-  Generated on Wed Aug 21 16:17:53 2013 by
+  Generated on Sun Apr  6 15:36:21 2014 by
   <a href="http://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
-  0.8.7 (ruby-2.0.0).
+  0.8.7.4 (ruby-2.1.0).
 </div>
 
   </body>
