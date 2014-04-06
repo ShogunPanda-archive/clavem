@@ -187,7 +187,7 @@ module Clavem
             Clavem::Server.new(self)
           end
 
-          server.join(@timeout > 0 ? @timeout : nil)
+          @timeout > 0 ? server.join(@timeout) : server.join
         rescue Interrupt
           raise Clavem::Exceptions::Failure.new(@i18n.errors.interrupted)
         end
