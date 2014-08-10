@@ -9,7 +9,7 @@ require File.expand_path('../lib/clavem/version', __FILE__)
 Gem::Specification.new do |gem|
   gem.name = "clavem"
   gem.version = Clavem::Version::STRING
-  gem.homepage = "http://sw.cow.tc/clavem"
+  gem.homepage = "http://sw.cowtech.it/clavem"
   gem.summary = "A local callback server for oAuth web-flow."
   gem.description = "A local callback server for oAuth web-flow."
   gem.rubyforge_project = "clavem"
