@@ -34,7 +34,7 @@ module Clavem
   #   @return [String] The token obtained by the remote endpoint.
   # @attribute status
   #   @return [Symbol] The status of the request. Can be `:succeeded`, `:denied`, `:failed` and `:waiting`.
-  # @attribute :i18n
+  # @attribute [r] :i18n
   #   @return [Bovem::I18n] A localizer object.
   class Authorizer
     attr_accessor :url
@@ -45,7 +45,7 @@ module Clavem
     attr_accessor :response_handler
     attr_accessor :token
     attr_accessor :status
-    attr_accessor :i18n
+    attr_reader :i18n
 
     # Returns a unique (singleton) instance of the authorizer.
     #

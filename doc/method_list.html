@@ -20,7 +20,11 @@
   </head>
   <body>
     <script type="text/javascript" charset="utf-8">
-      if (window.top.frames.main) {
+      var hasFrames = false;
+      try {
+        hasFrames = window.top.frames.main ? true : false;
+      } catch (e) { }
+      if (hasFrames) {
         document.getElementById('base_target').target = 'main';
         document.body.className = 'frames';
       }
@@ -114,60 +118,54 @@
   
 
   <li class="r2 ">
-    <span class='object_link'><a href="Clavem/Authorizer.html#localize-instance_method" title="Clavem::Authorizer#localize (method)">#localize</a></span>
-    <small>Clavem::Authorizer</small>
-  </li>
-  
-
-  <li class="r1 ">
     <span class='object_link'><a href="Clavem/Authorizer.html#port-instance_method" title="Clavem::Authorizer#port (method)">#port</a></span>
     <small>Clavem::Authorizer</small>
   </li>
   
 
-  <li class="r2 ">
+  <li class="r1 ">
     <span class='object_link'><a href="Clavem/Server.html#process_http_request-instance_method" title="Clavem::Server#process_http_request (method)">#process_http_request</a></span>
     <small>Clavem::Server</small>
   </li>
   
 
-  <li class="r1 ">
+  <li class="r2 ">
     <span class='object_link'><a href="Clavem/Authorizer.html#response_handler-instance_method" title="Clavem::Authorizer#response_handler (method)">#response_handler</a></span>
     <small>Clavem::Authorizer</small>
   </li>
   
 
-  <li class="r2 ">
+  <li class="r1 ">
     <span class='object_link'><a href="Clavem/Authorizer.html#status-instance_method" title="Clavem::Authorizer#status (method)">#status</a></span>
     <small>Clavem::Authorizer</small>
   </li>
   
 
-  <li class="r1 ">
+  <li class="r2 ">
     <span class='object_link'><a href="Clavem/Authorizer.html#succeeded%3F-instance_method" title="Clavem::Authorizer#succeeded? (method)">#succeeded?</a></span>
     <small>Clavem::Authorizer</small>
   </li>
   
 
-  <li class="r2 ">
+  <li class="r1 ">
     <span class='object_link'><a href="Clavem/Authorizer.html#timeout-instance_method" title="Clavem::Authorizer#timeout (method)">#timeout</a></span>
     <small>Clavem::Authorizer</small>
   </li>
   
 
-  <li class="r1 ">
+  <li class="r2 ">
     <span class='object_link'><a href="Clavem/Authorizer.html#token-instance_method" title="Clavem::Authorizer#token (method)">#token</a></span>
     <small>Clavem::Authorizer</small>
   </li>
   
 
-  <li class="r2 ">
+  <li class="r1 ">
     <span class='object_link'><a href="Clavem/Authorizer.html#url-instance_method" title="Clavem::Authorizer#url (method)">#url</a></span>
     <small>Clavem::Authorizer</small>
   </li>
   
 
-  <li class="r1 ">
+  <li class="r2 ">
     <span class='object_link'><a href="Clavem/Authorizer.html#waiting%3F-instance_method" title="Clavem::Authorizer#waiting? (method)">#waiting?</a></span>
     <small>Clavem::Authorizer</small>
   </li>
