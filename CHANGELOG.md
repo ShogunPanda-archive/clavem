@@ -1,4 +1,8 @@
-### 2.2.0 / 2016-03-29
+### 2.2.1 / 2016-03-30
+
+* Remove invalid path manipulation in the binary.
+
+### 2.2.0 / 2016-03-30
 
 * `Clavem::Authorizer#i18n` now returns a `Bovem::I18n` object.
 * Changed signatures of `Clavem::Authorizer.instance` and `Clavem::Authorizer#initializr`.
