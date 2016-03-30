@@ -5,7 +5,7 @@
 ### 2.2.0 / 2016-03-30
 
 * `Clavem::Authorizer#i18n` now returns a `Bovem::I18n` object.
-* Changed signatures of `Clavem::Authorizer.instance` and `Clavem::Authorizer#initializr`.
+* Changed signatures of `Clavem::Authorizer.instance` and `Clavem::Authorizer#initialize`.
 * Updated dependencies and linted code.
 * Dropped support for Ruby < 2.3.
 
