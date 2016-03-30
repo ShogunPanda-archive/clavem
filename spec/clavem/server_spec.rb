@@ -18,7 +18,7 @@ describe Clavem::Server do
   end
 
   describe "#process_http_request" do
-    before(:each) do
+    before(:each) do |example|
       allow(Kernel).to receive(:system)
 
       socket = double(TCPSocket)
@@ -35,14 +35,14 @@ describe Clavem::Server do
 
     it "should save the token and report success", query: "oauth_token=TOKEN" do
       authorizer.authorize("URL")
-      expect(authorizer.succeeded?).to be_true
+      expect(authorizer.succeeded?).to be_truthy
       expect(authorizer.token).to eq("TOKEN")
     end
 
     it "should report failure", query: "notoken=TOKEN" do
       authorizer.authorize("URL")
 
-      expect(authorizer.denied?).to be_true
+      expect(authorizer.denied?).to be_truthy
       expect(authorizer.token).to eq(nil)
     end
   end

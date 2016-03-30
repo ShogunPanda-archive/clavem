@@ -5,12 +5,13 @@
 #
 
 ---
+en:
   clavem:
     errors:
-      response_failure: "Cannot handle response: %1"
-      open_failure: "Cannot open URL %1: %2"
+      response_failure: "Cannot handle response: %s"
+      open_failure: "Cannot open URL %s: %s"
       interrupted: "Authentication interrupted by the user."
-    template: "This window will close in few moments. If this doesn't happens you can close it by yourself, this won't cause any problem."
+    template: "The authentication process on the URL has ended. You can now close this window and continue in the console."
     application_description: "A local callback server for oAuth web-flow."
     application_help_url: "The URL where to send the user to start authorization."
     application_help_host: "The host address on which listening for the reply. Default is localhost."
@@ -21,7 +22,7 @@
     application_help_quiet: "Do not print anything but errors."
     application_meta_port: "PORT"
     application_meta_command: "COMMAND"
-    cli_running: "Clavem is waiting for a response at URL {mark=bright}%1{/mark} ..."
-    cli_obtaining: "Obtaining token from URL {mark=bright}%1{/mark}."
-    cli_succeeded: "Obtained access token is: {mark=bright}%1{/mark}"
+    cli_running: "Clavem is waiting for a response at URL {mark=bright}%s{/mark} ..."
+    cli_obtaining: "Obtaining token from URL {mark=bright}%s{/mark}."
+    cli_succeeded: "Obtained access token is: {mark=bright}%s{/mark}"
     cli_failed: "No access token obtained."

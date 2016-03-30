@@ -35,9 +35,8 @@ module Clavem
   # @attribute status
   #   @return [Symbol] The status of the request. Can be `:succeeded`, `:denied`, `:failed` and `:waiting`.
   # @attribute :i18n
-  #   @return [R18N::Translation] A localizer object.
+  #   @return [Bovem::I18n] A localizer object.
   class Authorizer
-    include R18n::Helpers
     attr_accessor :url
     attr_accessor :host
     attr_accessor :port
@@ -58,9 +57,9 @@ module Clavem
     # @param response_handler [Proc] A Ruby block to handle response and check for success. See {#response_handler}.
     # @param force [Boolean] If to force recreation of the instance.
     # @return [Authorizer] The unique (singleton) instance of the authorizer.
-    def self.instance(host = "localhost", port = 7772, command = nil, timeout = 0, force = false, &response_handler)
+    def self.instance(host: "localhost", port: 7772, command: nil, timeout: 0, force: false, &response_handler)
       @instance = nil if force
-      @instance ||= Clavem::Authorizer.new(host, port, command, timeout, &response_handler)
+      @instance ||= Clavem::Authorizer.new(host: host, port: port, command: command, timeout: timeout, &response_handler)
       @instance
     end
 
@@ -73,8 +72,8 @@ module Clavem
     #   Default is `0`, which means *disabled*.
     # @param response_handler [Proc] A Ruby block to handle response and check for success. See {#response_handler}.
     # @return [Authorizer] The new authorizer.
-    def initialize(host = "localhost", port = 7772, command = nil, timeout = 0, &response_handler)
-      @i18n = self.localize
+    def initialize(host: "localhost", port: 7772, command: nil, timeout: 0, &response_handler)
+      @i18n = Bovem::I18n.new(root: "clavem.errors", path: ::Pathname.new(::File.dirname(__FILE__)).to_s + "/../../locales/")
       @host = host.ensure_string
       @port = port.to_integer
       @command = command.ensure_string
@@ -105,7 +104,7 @@ module Clavem
         process_response
       rescue => e
         @status = :failed
-        raise Clavem::Exceptions::Failure.new(@i18n.errors.response_failure(e.to_s))
+        raise(Clavem::Exceptions::Failure, @i18n.response_failure(e.to_s))
       end
 
       succeeded?
@@ -121,16 +120,7 @@ module Clavem
     # Returns the response handler for the authorizer.
     #
     def response_handler
-      @response_handler || Proc.new {|querystring| (querystring || {})["oauth_token"] }
-    end
-
-    # Set the current locale for messages.
-    #
-    # @param locale [String] The new locale. Default is the current system locale.
-    # @return [R18n::Translation] The new translations object.
-    def localize(locale = nil)
-      @i18n_locales_path ||= ::File.absolute_path(::Pathname.new(::File.dirname(__FILE__)).to_s + "/../../locales/")
-      R18n::I18n.new([locale || :en, ENV["LANG"], R18n::I18n.system_locale].compact, @i18n_locales_path).t.clavem
+      @response_handler || ->(querystring) { (querystring || {})["oauth_token"] }
     end
 
     # Checks if authentication succeeded.
@@ -162,35 +152,32 @@ module Clavem
     end
 
     private
-      # sanitize_arguments
-      def sanitize_arguments
-        @host = "localhost" if @host.blank?
-        @port = 7772 if @port.to_integer < 1
-        @command = "open \"{{URL}}\"" if @command.blank?
-        @timeout = 0 if @timeout < 0
+
+    # :nodoc:
+    def sanitize_arguments
+      @host = "localhost" if @host.blank?
+      @port = 7772 if @port.to_integer < 1
+      @command = "open \"{{URL}}\"" if @command.blank?
+      @timeout = 0 if @timeout < 0
+    end
+
+    # :nodoc:
+    def perform_request
+      # Open the oAuth endpoint into the browser
+      Kernel.system(@command.gsub("{{URL}}", @url.ensure_string))
+    rescue => e
+      raise(Clavem::Exceptions::Failure, @i18n.open_failure(@url.ensure_string, e.to_s))
+    end
+
+    # :nodoc:
+    def process_response
+      server = Thread.new do
+        Clavem::Server.new(self)
       end
 
-      # Performs the authentication request.
-      def perform_request
-        # Open the oAuth endpoint into the browser
-        begin
-          Kernel.system(@command.gsub("{{URL}}", @url.ensure_string))
-        rescue => e
-          raise Clavem::Exceptions::Failure.new(@i18n.errors.open_failure(@url.ensure_string, e.to_s))
-        end
-      end
-
-      # Processes the authentication response.
-      def process_response
-        begin
-          server = Thread.new do
-            Clavem::Server.new(self)
-          end
-
-          @timeout > 0 ? server.join(@timeout) : server.join
-        rescue Interrupt
-          raise Clavem::Exceptions::Failure.new(@i18n.errors.interrupted)
-        end
-      end
+      @timeout > 0 ? server.join(@timeout) : server.join
+    rescue Interrupt
+      raise(Clavem::Exceptions::Failure, @i18n.interrupted)
+    end
   end
 end

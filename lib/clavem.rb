@@ -4,9 +4,11 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-require "lazier"
 require "addressable/uri"
+require "socket"
+require "lazier"
+require "bovem/i18n"
 
-require "clavem/version" if !defined?(Clavem::Version)
+require "clavem/version" unless defined?(Clavem::Version)
 require "clavem/server"
 require "clavem/authorizer"

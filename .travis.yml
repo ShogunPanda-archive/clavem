@@ -1,10 +1,15 @@
+#
+# This file is part of the clavem gem. Copyright (C) 2013 and above Shogun <shogun@cowtech.it>.
+# Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
+#
+
 language: ruby
 rvm:
-  - 2.0.0
-  - 2.1.0
-  - jruby-19mode
-  - rbx-2.2.6
-script: bundle exec rake spec:coverage
+  - 2.3.0
+script: bundle exec rake spec:ci
 gemfile: .travis-gemfile
 notifications:
   email: false
+addons:
+  code_climate:
+    repo_token: 96f1635f12958a3bedb816f45c66ddb62a42529b5bc7f4abc7608edc52e596da

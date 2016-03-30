@@ -4,7 +4,7 @@
 # Licensed under the MIT license, which can be found at http://www.opensource.org/licenses/mit-license.php.
 #
 
-require File.expand_path('../lib/clavem/version', __FILE__)
+require File.expand_path("../lib/clavem/version", __FILE__)
 
 Gem::Specification.new do |gem|
   gem.name = "clavem"
@@ -23,8 +23,8 @@ Gem::Specification.new do |gem|
   gem.test_files = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
 
-  gem.required_ruby_version = ">= 1.9.3"
+  gem.required_ruby_version = ">= 2.3.0"
 
-  gem.add_dependency("bovem", "~> 3.0.5")
-  gem.add_dependency("addressable", "~> 2.3.6")
+  gem.add_dependency("bovem", "~> 4.0")
+  gem.add_dependency("addressable", "~> 2.3")
 end

@@ -5,12 +5,13 @@
 #
 
 ---
+it:
   clavem:
     errors:
-      response_failure: "Impossibile gestire una risposta: %1"
-      open_failure: "Impossible aprire l'URL %1: %2"
+      response_failure: "Impossibile gestire una risposta: %s"
+      open_failure: "Impossible aprire l'URL %s: %s"
       interrupted: "Autenticazione interrotta dall'utente."
-    template: "Questa finestra si chiuderà in pochi momenti. Se non succede puoi chiuderla da solo, ciò non causerà alcun problema."
+    template: "Il processo di autenticazione sull'URL si è concluso. Puoi ora chiudere questa finestra e continuare nel terminale."
     application_description: "Un server callback locale per il web-flow oAuth."
     application_help_url: "L'URL dove mandare l'utente per iniziare l'autenticazione."
     application_help_host: "L'indirizzo host dove rimanere in ascolto per la risposta. Il default è localhost."
@@ -21,7 +22,7 @@
     application_help_quiet: "Non mostrare nulla tranne che gli errori."
     application_meta_port: "PORTA"
     application_meta_command: "COMANDO"
-    cli_running: "Clavem è in attesa di una risposta all'URL {mark=bright}%1{/mark} ..."
-    cli_obtaining: "Ottengo il token dall'URL {mark=bright}%1{/mark}."
-    cli_succeeded: "Il token di accesso ottenuto è: {mark=bright}%1{/mark}"
+    cli_running: "Clavem è in attesa di una risposta all'URL {mark=bright}%s{/mark} ..."
+    cli_obtaining: "Ottengo il token dall'URL {mark=bright}%s{/mark}."
+    cli_succeeded: "Il token di accesso ottenuto è: {mark=bright}%s{/mark}"
     cli_failed: "Nessun token di accesso ottenuto."

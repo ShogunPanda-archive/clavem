@@ -11,20 +11,20 @@ describe Clavem::Authorizer do
 
   describe ".instance" do
     it "should call .new with the passed arguments" do
-      expect(::Clavem::Authorizer).to receive(:new).with("HOST", "PORT", "COMMAND", "TIMEOUT")
-      ::Clavem::Authorizer.instance("HOST", "PORT", "COMMAND", "TIMEOUT")
+      expect(::Clavem::Authorizer).to receive(:new).with(host: "HOST", port: "PORT", command: "COMMAND", timeout: "TIMEOUT")
+      ::Clavem::Authorizer.instance(host: "HOST", port: "PORT", command: "COMMAND", timeout: "TIMEOUT")
     end
 
     it "should return the same instance" do
       allow(::Clavem::Authorizer).to receive(:new) { Time.now }
-      authorizer = ::Clavem::Authorizer.instance("FIRST")
-      expect(::Clavem::Authorizer.instance("SECOND")).to be(authorizer)
+      authorizer = ::Clavem::Authorizer.instance(host: "FIRST")
+      expect(::Clavem::Authorizer.instance(host: "SECOND")).to be(authorizer)
     end
 
     it "should return a new instance if requested to" do
       allow(::Clavem::Authorizer).to receive(:new) { Time.now }
-      authorizer = ::Clavem::Authorizer.instance("FIRST")
-      expect(::Clavem::Authorizer.instance("HOST", "PORT", "COMMAND", "TIMEOUT", true)).not_to be(authorizer)
+      authorizer = ::Clavem::Authorizer.instance(host: "FIRST")
+      expect(::Clavem::Authorizer.instance(host: "HOST", port: "PORT", command: "COMMAND", timeout: "TIMEOUT", force: true)).not_to be(authorizer)
     end
   end
 
@@ -39,7 +39,7 @@ describe Clavem::Authorizer do
     end
 
     it "should assign arguments" do
-      authorizer = ::Clavem::Authorizer.new("HOST", 7773, "COMMAND", 2) do end
+      authorizer = ::Clavem::Authorizer.new(host: "HOST", port: 7773, command: "COMMAND", timeout: 2) do end
       expect(authorizer.host).to eq("HOST")
       expect(authorizer.port).to eq(7773)
       expect(authorizer.command).to eq("COMMAND")
@@ -48,7 +48,7 @@ describe Clavem::Authorizer do
     end
 
     it "should correct wrong arguments" do
-      authorizer = ::Clavem::Authorizer.new("IP", -10, "", -1)
+      authorizer = ::Clavem::Authorizer.new(host: "IP", port: -10, command: "", timeout: -1)
       expect(authorizer.port).to eq(7772)
       expect(authorizer.timeout).to eq(0)
     end
@@ -69,7 +69,7 @@ describe Clavem::Authorizer do
       allow(subject).to receive(:perform_request)
       allow(subject).to receive(:process_response)
       subject.authorize("URL")
-      expect(subject.waiting?).to be_true
+      expect(subject.waiting?).to be_truthy
     end
 
     it "should make a request" do
@@ -96,16 +96,16 @@ describe Clavem::Authorizer do
       allow(subject).to receive(:perform_request)
 
       allow(subject).to receive(:process_response) { subject.status = :succeeded }
-      expect(subject.authorize("URL")).to be_true
+      expect(subject.authorize("URL")).to be_truthy
 
       allow(subject).to receive(:process_response) { subject.status = :failed }
-      expect(subject.authorize("URL")).to be_false
+      expect(subject.authorize("URL")).to be_falsey
     end
 
     it "should handle errors" do
       allow(Kernel).to receive(:system).and_raise(RuntimeError.new)
       expect { subject.authorize("URL") }.to raise_error(Clavem::Exceptions::Failure)
-      expect(subject.failed?).to be_true
+      expect(subject.failed?).to be_truthy
     end
 
     it "should handle timeouts" do
@@ -120,14 +120,14 @@ describe Clavem::Authorizer do
       allow(Kernel).to receive(:system)
       allow(Clavem::Server).to receive(:new).and_raise(Interrupt)
       expect { subject.authorize("URL") }.to raise_error(Clavem::Exceptions::Failure)
-      expect(subject.failed?).to be_true
+      expect(subject.failed?).to be_truthy
     end
   end
 
   describe "#callback_url" do
     it "should return the correct callback" do
       expect(::Clavem::Authorizer.new.callback_url).to eq("http://localhost:7772")
-      expect(::Clavem::Authorizer.new("10.0.0.1", "80").callback_url).to eq("http://10.0.0.1:80")
+      expect(::Clavem::Authorizer.new(host: "10.0.0.1", port: "80").callback_url).to eq("http://10.0.0.1:80")
     end
   end
 
@@ -143,58 +143,39 @@ describe Clavem::Authorizer do
     end
   end
 
-  describe ".localize" do
-    it "should set the right locale path" do
-      expect(subject.instance_variable_get(:@i18n_locales_path)).to eq(File.absolute_path(::Pathname.new(File.dirname(__FILE__)).to_s + "/../../locales/"))
-      subject.localize
-    end
-
-    it "should set using English if called without arguments" do
-      authorizer = ::Clavem::Authorizer.new
-      expect(R18n::I18n).to receive(:new).with([:en, ENV["LANG"], R18n::I18n.system_locale].compact, File.absolute_path(::Pathname.new(File.dirname(__FILE__)).to_s + "/../../locales/")).and_call_original
-      authorizer.localize
-    end
-
-    it "should set the requested locale" do
-      authorizer = ::Clavem::Authorizer.new
-      expect(R18n::I18n).to receive(:new).with([:it, ENV["LANG"], R18n::I18n.system_locale].compact, File.absolute_path(::Pathname.new(File.dirname(__FILE__)).to_s + "/../../locales/")).and_call_original
-      authorizer.localize(:it)
-    end
-  end
-
   describe "#succeeded?" do
     it "should return the correct status" do
       subject.status = :other
-      expect(subject.succeeded?).to be_false
+      expect(subject.succeeded?).to be_falsey
       subject.status = :succeeded
-      expect(subject.succeeded?).to be_true
+      expect(subject.succeeded?).to be_truthy
     end
   end
 
   describe "#denied?" do
     it "should return the correct status" do
       subject.status = :other
-      expect(subject.denied?).to be_false
+      expect(subject.denied?).to be_falsey
       subject.status = :denied
-      expect(subject.denied?).to be_true
+      expect(subject.denied?).to be_truthy
     end
   end
 
   describe "#failed?" do
     it "should return the correct status" do
       subject.status = :other
-      expect(subject.failed?).to be_false
+      expect(subject.failed?).to be_falsey
       subject.status = :failed
-      expect(subject.failed?).to be_true
+      expect(subject.failed?).to be_truthy
     end
   end
 
   describe "#waiting?" do
     it "should return the correct status" do
       subject.status = :other
-      expect(subject.waiting?).to be_false
+      expect(subject.waiting?).to be_falsey
       subject.status = :waiting
-      expect(subject.waiting?).to be_true
+      expect(subject.waiting?).to be_truthy
     end
   end
 end

@@ -6,10 +6,11 @@
 #
 
 require "bovem"
+$:.unshift(File.absolute_path(File.dirname(__FILE__) + "/../lib/"))
 require "clavem"
 
 Bovem::Application.create do
-  localizer = Lazier::Localizer.new(:clavem, ::File.absolute_path(::Pathname.new(::File.dirname(__FILE__)).to_s + "/../locales/")).i18n
+  localizer = Bovem::I18n.new(root: "clavem", path: ::Pathname.new(::File.dirname(__FILE__)).to_s + "/../locales/")
   name "Clavem"
   description localizer.application_description
   version Clavem::Version::STRING
@@ -27,9 +28,9 @@ Bovem::Application.create do
     quiet = opts["quiet"]
     skip_callback = opts["skip_callback"]
 
-    authorizer = Clavem::Authorizer.instance(opts["host"], opts["port"], opts["command"], opts["timeout"])
+    authorizer = Clavem::Authorizer.instance(host: opts["host"], port: opts["port"], command: opts["command"], timeout: opts["timeout"])
 
-    command.console.info(localizer.cli_obtaining(opts["url"])) if !quiet
+    command.console.info(localizer.cli_obtaining(opts["url"])) unless quiet
     command.console.task(!quiet ? localizer.cli_running(authorizer.callback_url) : nil) do
       begin
         authorizer.authorize(opts["url"], !skip_callback) ? :ok : :fail
@@ -38,8 +39,8 @@ Bovem::Application.create do
       end
     end
 
-    if authorizer.succeeded? then
-      command.console.info(localizer.cli_succeeded(authorizer.token)) if !quiet
+    if authorizer.succeeded?
+      command.console.info(localizer.cli_succeeded(authorizer.token)) unless quiet
     else
       command.console.error(localizer.cli_failed)
     end
