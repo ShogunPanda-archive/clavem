@@ -4,13 +4,11 @@
 [![Dependency Status](https://gemnasium.com/ShogunPanda/clavem.png?travis)](https://gemnasium.com/ShogunPanda/clavem)
 [![Build Status](https://secure.travis-ci.org/ShogunPanda/clavem.png?branch=master)](http://travis-ci.org/ShogunPanda/clavem)
 [![Code Climate](https://codeclimate.com/github/ShogunPanda/clavem.png)](https://codeclimate.com/github/ShogunPanda/clavem)
-[![Coverage Status](https://coveralls.io/repos/ShogunPanda/clavem/badge.png)](https://coveralls.io/r/ShogunPanda/clavem)
+[![Coverage Status](https://coveralls.io/repos/github/ShogunPanda/clavem/badge.svg?branch=master)](https://coveralls.io/github/ShogunPanda/clavem?branch=master)
 
 A local callback server for oAuth web-flow.
 
-http://sw.cowtech.it/clavem
-
-http://rdoc.info/gems/clavem
+https://sw.cowtech.it/clavem
 
 ## Usage
 
@@ -50,8 +48,12 @@ To use on jRuby, you need to install a gem with C extensions which must be compi
 
 See jRuby documentation to see how to enabled extensions compilation.
 
+## API Documentation
+
+The API documentation can be found [here](https://sw.cowtech.it/clavem/docs).
+
 ## Contributing to clavem
- 
+
 * Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
 * Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
 * Fork the project.
