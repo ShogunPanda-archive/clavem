@@ -1,13 +1,8 @@
-# Introduction
+# clavem
 
-[![Gem Version](https://img.shields.io/gem/v/clavem.svg)](https://rubygems.org/gems/clavem)
-[![Dependency Status](https://img.shields.io/gemnasium/ShogunPanda/clavem.svg)](https://gemnasium.com/ShogunPanda/clavem)
-[![Build Status](https://img.shields.io/travis/ShogunPanda/clavem.svg)](http://travis-ci.org/ShogunPanda/clavem)
-[![Coverage Status](https://img.shields.io/coveralls/github/ShogunPanda/clavem.svg)](https://coveralls.io/github/ShogunPanda/clavem)
+## END OF DEVELOPMENT NOTICE - This gem has been discontinued
 
 A local callback server for oAuth web-flow.
-
-https://sw.cowtech.it/clavem
 
 ## Usage
 
@@ -53,13 +48,13 @@ The API documentation can be found [here](https://sw.cowtech.it/clavem/docs).
 
 ## Contributing to clavem
 
-* Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
-* Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
-* Fork the project.
-* Start a feature/bugfix branch.
-* Commit and push until you are happy with your contribution.
-* Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
-* Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
+- Check out the latest master to make sure the feature hasn't been implemented or the bug hasn't been fixed yet.
+- Check out the issue tracker to make sure someone already hasn't requested it and/or contributed it.
+- Fork the project.
+- Start a feature/bugfix branch.
+- Commit and push until you are happy with your contribution.
+- Make sure to add tests for it. This is important so I don't break it in a future version unintentionally.
+- Please try not to mess with the Rakefile, version, or history. If you want to have your own version, or is otherwise necessary, that is fine, but please isolate to its own commit so I can cherry-pick around it.
 
 ## Copyright
 
